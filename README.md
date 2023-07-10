@@ -28,7 +28,7 @@
 <!-- ABOUT THE PROJECT -->
 
 ## 🔨 Running guide
-Before you run project install newest docker compose.
+Before you run project install and configure java with environment variable.
 
 ###  🟢 Running project
 ```bash
