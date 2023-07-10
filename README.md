@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Mario_emblem.svg/2048px-Mario_emblem.svg.png">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Mario_emblem.svg/2048px-Mario_emblem.svg.png" alt="Logo" style="max-width: 200px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Mario_emblem.svg/2048px-Mario_emblem.svg.png" alt="Logo" style="width: 150px;">
 
   </a>`
 
