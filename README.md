@@ -2,7 +2,8 @@
 <br />
 <div align="center">
   <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Mario_emblem.svg/2048px-Mario_emblem.svg.png">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Mario_emblem.svg/2048px-Mario_emblem.svg.png" alt="Logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Mario_emblem.svg/2048px-Mario_emblem.svg.png" alt="Logo" style="max-width: 200px;">
+
   </a>`
 
   <h3 align="center">Shared Creativity</h3>
