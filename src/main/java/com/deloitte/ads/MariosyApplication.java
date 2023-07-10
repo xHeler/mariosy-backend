@@ -1,7 +1,7 @@
 package com.deloitte.ads;
 
 
-public class App 
+public class MariosyApplication
 {
     public static void main( String[] args )
     {
