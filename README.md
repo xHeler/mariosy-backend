@@ -6,7 +6,7 @@
 
   </a>`
 
-  <h3 align="center">Shared Creativity</h3>
+  <h3 align="center">Mariosy Backend</h3>
 
   <p align="center">
     A project made for sharing evaluation between teammates.
