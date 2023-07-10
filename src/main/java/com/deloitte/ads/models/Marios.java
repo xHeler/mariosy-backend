@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Kudos {
+public class Marios {
 
     private Long id;
 
