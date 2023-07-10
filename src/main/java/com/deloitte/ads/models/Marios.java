@@ -14,4 +14,6 @@ public class Marios {
     private Employee receiver;
 
     private String message;
+
+    private ReactionType reaction;
 }
