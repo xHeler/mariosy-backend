@@ -5,16 +5,12 @@ import com.deloitte.ads.repositories.interfaces.MariosRepository;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
 public class LocalMariosRepository implements MariosRepository {
-    private Map<Long, Marios> mariosMap = new HashMap<>();
+    private Map<UUID, Marios> mariosMap = new HashMap<>();
 
     @Override
     public void saveMarios(Marios marios) {
@@ -22,7 +18,7 @@ public class LocalMariosRepository implements MariosRepository {
     }
 
     @Override
-    public Optional<Marios> getMariosById(Long id) {
+    public Optional<Marios> getMariosById(UUID id) {
         return Optional.ofNullable(mariosMap.get(id));
     }
 

@@ -6,11 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
 public class LocalEmployeeRepository implements EmployeeRepository {
-    private Map<Long, Employee> employeeMap = new HashMap<>();
+    private Map<UUID, Employee> employeeMap = new HashMap<>();
+
 
     @Override
     public void saveEmployee(Employee employee) {
@@ -18,9 +20,17 @@ public class LocalEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public Optional<Employee> getEmployeeById(Long id) {
+    public Optional<Employee> getEmployeeById(UUID id) {
         return Optional.ofNullable(employeeMap.get(id));
     }
+
+    @Override
+    public List<Employee> findAllEmployeesByFirstName(String firstName) {
+        return employeeMap.values().stream()
+                .filter(employee -> employee.getFirstName().equals(firstName))
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public void updateEmployee(Employee employee) {
