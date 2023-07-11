@@ -1,5 +1,6 @@
 package com.deloitte.ads.repositories;
 
+import com.deloitte.ads.exceptions.EmployeeNotFoundException;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
 import lombok.Data;
@@ -34,7 +35,8 @@ public class LocalEmployeeRepository implements EmployeeRepository {
 
     @Override
     public void updateEmployee(Employee employee) {
-        employeeMap.put(employee.getId(), employee);
+        UUID id = employee.getId();
+        if (getEmployeeById(id).isPresent()) employeeMap.put(employee.getId(), employee);
     }
 
     @Override
