@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/employee/")
+@RequestMapping("/api/v1/employee")
 @RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeService employeeService;
