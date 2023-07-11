@@ -5,12 +5,14 @@ import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
+@Repository
 public class LocalEmployeeRepository implements EmployeeRepository {
     private Map<UUID, Employee> employeeMap = new HashMap<>();
 

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LocalEmployeeRepositoryTest {
+class LocalEmployeeRepositoryTestDto {
     @Mock
     private Employee employee;
 

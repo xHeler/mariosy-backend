@@ -1,9 +1,11 @@
 package com.deloitte.ads.services;
 
+import com.deloitte.ads.exceptions.EmployeeNotFoundException;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +13,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Data
+@Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
@@ -21,7 +24,7 @@ public class EmployeeService {
     public Employee getEmployeeById(UUID id) throws Exception {
         Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(id);
         if (employeeOptional.isPresent()) return employeeOptional.get();
-        throw new Exception("Employee with id=" + id + "not exist!");
+        throw new EmployeeNotFoundException("Employee with id=" + id + "not exist!");
     }
 
     public List<Employee> getEmployeeByFirstName(String firstName) throws Exception {
