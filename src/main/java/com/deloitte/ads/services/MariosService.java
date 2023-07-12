@@ -8,6 +8,7 @@ import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.models.ReactionType;
 import com.deloitte.ads.repositories.interfaces.MariosRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
+@Service
 public class MariosService {
     private final MariosRepository mariosRepository;
     private final EmployeeService employeeService;
@@ -39,7 +41,7 @@ public class MariosService {
         saveMarios(marios);
     }
 
-    public void addMarios(Employee sender, Set<Employee> receivers, String message, ReactionType reaction) {
+    public void addMarios(Employee sender, List<Employee> receivers, String message, ReactionType reaction) {
         // todo: should be in a transaction
         receivers.forEach(employee -> {
             try {

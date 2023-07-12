@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +32,7 @@ public class EmployeeService {
                 .build();
         employeeRepository.saveEmployee(employee);
     }
+
     public void saveEmployee(String id, EmployeeDto employeeDto) {
         Employee employee = Employee
                 .builder()
@@ -46,6 +48,14 @@ public class EmployeeService {
         Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(id);
         if (employeeOptional.isPresent()) return employeeOptional.get();
         throw new EmployeeNotFoundException("Employee with id=" + id + "not exist!");
+    }
+
+    public List<Employee> getAllEmployeesByIds(List<String> ids) throws Exception {
+        List<Employee> employees = new ArrayList<>();
+        for (String id : ids) {
+            employees.add(getEmployeeById(UUID.fromString(id)));
+        }
+        return employees;
     }
 
     public List<Employee> findEmployeeByQuery(String query) throws Exception {
