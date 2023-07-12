@@ -1,3 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mariosy
+    username: admin
+    password: admin
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
 springdoc:
   swagger-ui:
     path: /docs/swagger-ui
