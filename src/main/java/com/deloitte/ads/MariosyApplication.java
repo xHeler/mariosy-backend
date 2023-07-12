@@ -10,11 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @RequiredArgsConstructor
-public class MariosyApplication implements CommandLineRunner
-{
+public class MariosyApplication implements CommandLineRunner {
     private final EmployeeService employeeService;
 
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
         SpringApplication.run(MariosyApplication.class, args);
     }
 
