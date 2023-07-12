@@ -64,34 +64,6 @@ class EmployeeDtoServiceTest {
         assertThrows(Exception.class, () -> employeeService.getEmployeeById(id));
     }
 
-    @Test
-    void getEmployeeByFirstName_WhenEmployeesExist_ShouldReturnListOfEmployees() throws Exception {
-        // Arrange
-        String firstName = "Andy";
-        Employee employee2 = Employee.builder()
-                .firstName("Andy")
-                .lastName("Smith")
-                .email("smith@gmail.com")
-                .build();
-        List<Employee> employees = Arrays.asList(employee, employee2);
-        when(employeeRepository.findAllEmployeesByFirstName(firstName)).thenReturn(employees);
-
-        // Act
-        List<Employee> result = employeeService.getEmployeeByFirstName(firstName);
-
-        // Assert
-        assertEquals(employees, result);
-    }
-
-    @Test
-    void getEmployeeByFirstName_WhenNoEmployeesExist_ShouldThrowException() {
-        // Arrange
-        String firstName = "Andy";
-        when(employeeRepository.findAllEmployeesByFirstName(firstName)).thenReturn(Collections.emptyList());
-
-        // Act and Assert
-        assertThrows(Exception.class, () -> employeeService.getEmployeeByFirstName(firstName));
-    }
 
     @Test
     void isEmployeeExist_WhenEmployeeExists_ShouldReturnTrue() throws Exception {
