@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -74,5 +75,15 @@ public class MariosService {
 
     public List<Marios> getAllMarios() {
         return mariosRepository.getAllMarios();
+    }
+
+    public List<Marios> getAllSentMariosByEmployeeId(String id) {
+        UUID uuid = UUID.fromString(id);
+        return mariosRepository.getAllMarios().stream().filter(e -> e.getSender().getId().equals(uuid)).collect(Collectors.toList());
+    }
+
+    public List<Marios> getAllReceiveMariosByEmployeeId(String id) {
+        UUID uuid = UUID.fromString(id);
+        return mariosRepository.getAllMarios().stream().filter(e -> e.getReceiver().getId().equals(uuid)).collect(Collectors.toList());
     }
 }

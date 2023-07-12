@@ -25,6 +25,16 @@ public class MariosController {
         return new ResponseEntity<>(mariosService.getAllMarios(), HttpStatus.OK);
     }
 
+    @GetMapping("/sent/{id}")
+    ResponseEntity<List<Marios>> getAllSentMariosByEmployeeId(@PathVariable String id) {
+        return new ResponseEntity<>(mariosService.getAllSentMariosByEmployeeId(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/receive/{id}")
+    ResponseEntity<List<Marios>> getAllReceiveMariosByEmployeeId(@PathVariable String id) {
+        return new ResponseEntity<>(mariosService.getAllReceiveMariosByEmployeeId(id), HttpStatus.OK);
+    }
+
     @PostMapping
     ResponseEntity<Void> addMarios(@RequestBody MariosDto mariosDto) {
         try {
@@ -36,4 +46,27 @@ public class MariosController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> removeMarios(@PathVariable String id) {
+        try {
+            Marios marios = mariosService.getMariosById(UUID.fromString(id));
+            mariosService.deleteMarios(marios);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    ResponseEntity<Void> updateMarios(@PathVariable String id) {
+        try {
+            Marios marios = mariosService.getMariosById(UUID.fromString(id));
+            mariosService.updateMarios(marios);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
