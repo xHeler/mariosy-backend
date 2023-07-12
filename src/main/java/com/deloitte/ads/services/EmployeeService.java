@@ -1,5 +1,6 @@
 package com.deloitte.ads.services;
 
+import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.exceptions.EmployeeNotFoundException;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
@@ -21,15 +22,36 @@ public class EmployeeService {
         employeeRepository.saveEmployee(employee);
     }
 
+    public void saveEmployee(EmployeeDto employeeDto) {
+        Employee employee = Employee
+                .builder()
+                .firstName(employeeDto.getFirstName())
+                .lastName(employeeDto.getLastName())
+                .email(employeeDto.getEmail())
+                .build();
+        employeeRepository.saveEmployee(employee);
+    }
+    public void saveEmployee(String id, EmployeeDto employeeDto) {
+        Employee employee = Employee
+                .builder()
+                .id(UUID.fromString(id))
+                .firstName(employeeDto.getFirstName())
+                .lastName(employeeDto.getLastName())
+                .email(employeeDto.getEmail())
+                .build();
+        employeeRepository.saveEmployee(employee);
+    }
+
     public Employee getEmployeeById(UUID id) throws Exception {
         Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(id);
         if (employeeOptional.isPresent()) return employeeOptional.get();
         throw new EmployeeNotFoundException("Employee with id=" + id + "not exist!");
     }
 
-    public List<Employee> getEmployeeByFirstName(String firstName) throws Exception {
-        List<Employee> employees = employeeRepository.findAllEmployeesByFirstName(firstName);
-        if (employees.isEmpty()) throw new Exception("There is not any employee with first name = " + firstName);
+    public List<Employee> findEmployeeByQuery(String query) throws Exception {
+        List<Employee> employees = employeeRepository.findAllEmployeesByFirstName(query);
+        employees.addAll(employeeRepository.findAllEmployeesByLastName(query));
+        if (employees.isEmpty()) throw new Exception("There is not any employee with query=" + query);
         return employees;
     }
 
@@ -43,6 +65,17 @@ public class EmployeeService {
     }
 
     public void updateEmployee(Employee employee) {
+        employeeRepository.updateEmployee(employee);
+    }
+
+    public void updateEmployee(String id, EmployeeDto employeeDto) {
+        Employee employee = Employee
+                .builder()
+                .id(UUID.fromString(id))
+                .firstName(employeeDto.getFirstName())
+                .lastName(employeeDto.getLastName())
+                .email(employeeDto.getEmail())
+                .build();
         employeeRepository.updateEmployee(employee);
     }
 

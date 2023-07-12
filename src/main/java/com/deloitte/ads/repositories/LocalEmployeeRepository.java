@@ -30,7 +30,16 @@ public class LocalEmployeeRepository implements EmployeeRepository {
     @Override
     public List<Employee> findAllEmployeesByFirstName(String firstName) {
         return employeeMap.values().stream()
-                .filter(employee -> employee.getFirstName().equals(firstName))
+                .filter(employee ->
+                        employee.getFirstName().toLowerCase().contains(firstName.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Employee> findAllEmployeesByLastName(String lastName) {
+        return employeeMap.values().stream()
+                .filter(employee ->
+                        employee.getLastName().toLowerCase().contains(lastName.toLowerCase()))
                 .collect(Collectors.toList());
     }
 

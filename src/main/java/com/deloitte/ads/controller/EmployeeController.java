@@ -28,6 +28,7 @@ public class EmployeeController {
         UUID uuid = UUID.fromString(id);
         try {
             Employee employee = employeeService.getEmployeeById(uuid);
+            employeeService.deleteEmployee(employee);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
@@ -35,16 +36,29 @@ public class EmployeeController {
     }
 
     @PostMapping
-    ResponseEntity<Employee> addEmployee(@RequestBody EmployeeDto employeeDto) {
-        Employee employee = Employee
-                .builder()
-                .firstName(employeeDto.getFirstName())
-                .lastName(employeeDto.getLastName())
-                .email(employeeDto.getEmail())
-                .build();
-        employeeService.saveEmployee(employee);
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+    ResponseEntity<EmployeeDto> addEmployee(@RequestBody EmployeeDto employeeDto) {
+        employeeService.saveEmployee(employeeDto);
+        return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    ResponseEntity<EmployeeDto> updateEmployee(@PathVariable String id, @RequestBody EmployeeDto employeeDto) {
+        try {
+            employeeService.updateEmployee(id, employeeDto);
+            return new ResponseEntity<>(employeeDto, HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search")
+    ResponseEntity<List<Employee>> searchEmployee(@RequestParam("q") String query) {
+        try {
+            List<Employee> employees = employeeService.findEmployeeByQuery(query);
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

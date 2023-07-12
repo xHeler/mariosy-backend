@@ -16,6 +16,8 @@ public interface EmployeeRepository {
 
     List<Employee> findAllEmployeesByFirstName(String firstName);
 
+    List<Employee> findAllEmployeesByLastName(String lastName);
+
     void updateEmployee(Employee employee);
 
     void deleteEmployee(Employee employee);
