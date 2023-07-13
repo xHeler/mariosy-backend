@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/marios")
+@RequestMapping("/api/v1/marios") // todo: remove v1/
 @RequiredArgsConstructor
 public class MariosController {
     private final MariosService mariosService;
@@ -26,7 +26,7 @@ public class MariosController {
     }
 
     @GetMapping("/sent/{id}")
-    ResponseEntity<List<Marios>> getAllSentMariosByEmployeeId(@PathVariable String id) {
+    ResponseEntity<List<Marios>> getAllSentMariosByEmployeeId(@PathVariable String id) { //todo: id -> EmployeeId
         return new ResponseEntity<>(mariosService.getAllSentMariosByEmployeeId(id), HttpStatus.OK);
     }
 
@@ -36,7 +36,7 @@ public class MariosController {
     }
 
     @PostMapping
-    ResponseEntity<Void> addMarios(@RequestBody MariosDto mariosDto) {
+    ResponseEntity<Void> addMarios(@RequestBody MariosDto mariosDto) { //todo: pass business logic into service
         try {
             Employee sender = employeeService.getEmployeeById(UUID.fromString(mariosDto.getSenderId()));
             List<Employee> receivers = employeeService.getAllEmployeesByIds(mariosDto.getReceiversId());

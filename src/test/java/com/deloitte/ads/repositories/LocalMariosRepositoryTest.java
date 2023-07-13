@@ -13,6 +13,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LocalMariosRepositoryTest {
+
+    //todo: given/when/then
     @Mock
     private Marios marios;
 

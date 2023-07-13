@@ -6,7 +6,7 @@ import com.deloitte.ads.exceptions.SelfMariosException;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.models.ReactionType;
-import com.deloitte.ads.repositories.interfaces.MariosRepository;
+import com.deloitte.ads.repositories.MariosRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,7 @@ public class MariosService {
     private final EmployeeService employeeService;
 
     public void addMarios(Employee sender, Employee receiver, String message, ReactionType reaction) throws EmployeeNotFoundException, SelfMariosException {
+        //todo: validation method
         if (!employeeService.isEmployeeExist(sender)) {
             throw new EmployeeNotFoundException("Employee = " + sender + " does not exist!");
         }
@@ -32,6 +33,7 @@ public class MariosService {
             throw new SelfMariosException("You cannot give Marios to yourself!");
         }
 
+        //todo: create marios method
         Marios marios = Marios.builder()
                 .message(message)
                 .reaction(reaction)
@@ -46,10 +48,8 @@ public class MariosService {
         receivers.forEach(employee -> {
             try {
                 addMarios(sender, employee, message, reaction);
-            } catch (EmployeeNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (SelfMariosException e) {
-                throw new RuntimeException(e);
+            } catch (EmployeeNotFoundException | SelfMariosException e) {
+                throw new RuntimeException(e); //todo: remove runtime exception
             }
         });
     }
@@ -80,11 +80,12 @@ public class MariosService {
 
     public List<Marios> getAllSentMariosByEmployeeId(String id) {
         UUID uuid = UUID.fromString(id);
+        //todo: separate in more methods | ex. getAllMarios
         return mariosRepository.getAllMarios().stream().filter(e -> e.getSender().getId().equals(uuid)).collect(Collectors.toList());
     }
 
     public List<Marios> getAllReceiveMariosByEmployeeId(String id) {
-        UUID uuid = UUID.fromString(id);
+        UUID uuid = UUID.fromString(id); //todo: separate in more methods
         return mariosRepository.getAllMarios().stream().filter(e -> e.getReceiver().getId().equals(uuid)).collect(Collectors.toList());
     }
 }

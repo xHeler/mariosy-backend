@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.when;
 
 @WebMvcTest(EmployeeController.class)
 public class EmployeeControllerIntegrationTest {
+    //todo: given, when then block in tests
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,7 +40,7 @@ public class EmployeeControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllEmployees() throws Exception {
+    public void testGetAllEmployees() throws Exception { //todo: remove `test` word from test naming convention
         Employee employee1 = Employee
                 .builder()
                 .firstName("John")
@@ -154,7 +156,7 @@ public class EmployeeControllerIntegrationTest {
 
         List<Employee> employees = Arrays.asList(employee1, employee2);
 
-        when(employeeService.findEmployeeByQuery(eq(query))).thenReturn(employees);
+        when(employeeService.findEmployeeByQuery(eq(query))).thenReturn((ResponseEntity<List<Employee>>) employees);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/employee/search")
                         .param("q", query)

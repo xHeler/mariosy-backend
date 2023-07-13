@@ -2,10 +2,13 @@ package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.exceptions.EmployeeNotFoundException;
+import com.deloitte.ads.factories.EmployeeFactory;
 import com.deloitte.ads.models.Employee;
-import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
+import com.deloitte.ads.repositories.EmployeeRepository;
+import com.deloitte.ads.utils.DtoConverter;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,32 +23,25 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
-    public void saveEmployee(Employee employee) {
+    public ResponseEntity<EmployeeDto> saveEmployee(Employee employee) {
         employeeRepository.saveEmployee(employee);
+        return ResponseEntity.ok(DtoConverter.convertToDto(employee));
     }
 
-    public void saveEmployee(EmployeeDto employeeDto) {
-        Employee employee = Employee
-                .builder()
-                .firstName(employeeDto.getFirstName())
-                .lastName(employeeDto.getLastName())
-                .email(employeeDto.getEmail())
-                .build();
+    public ResponseEntity<EmployeeDto> saveEmployee(EmployeeDto employeeDto) {
+        //todo: check employees with the same email
+        Employee employee = EmployeeFactory.createEmployee(employeeDto);
         employeeRepository.saveEmployee(employee);
+        return ResponseEntity.ok(employeeDto);
     }
 
-    public void saveEmployee(String id, EmployeeDto employeeDto) {
-        Employee employee = Employee
-                .builder()
-                .id(UUID.fromString(id))
-                .firstName(employeeDto.getFirstName())
-                .lastName(employeeDto.getLastName())
-                .email(employeeDto.getEmail())
-                .build();
+    public ResponseEntity<EmployeeDto> saveEmployee(String id, EmployeeDto employeeDto) {
+        Employee employee = EmployeeFactory.createEmployee(id, employeeDto);
         employeeRepository.saveEmployee(employee);
+        return ResponseEntity.ok(DtoConverter.convertToDto(employee));
     }
 
-    public Employee getEmployeeById(UUID id) throws Exception {
+    public Employee getEmployeeById(UUID id) {
         Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(id);
         if (employeeOptional.isPresent()) return employeeOptional.get();
         throw new EmployeeNotFoundException("Employee with id=" + id + "not exist!");
@@ -59,39 +55,41 @@ public class EmployeeService {
         return employees;
     }
 
-    public List<Employee> findEmployeeByQuery(String query) throws Exception {
+    public ResponseEntity<List<Employee>> findEmployeeByQuery(String query) {
         List<Employee> employees = employeeRepository.findAllEmployeesByFirstName(query);
         employees.addAll(employeeRepository.findAllEmployeesByLastName(query));
-        if (employees.isEmpty()) throw new Exception("There is not any employee with query=" + query);
-        return employees;
+        return ResponseEntity.ok(employees);
+    }
+
+    public boolean isEmployeeExist(String id) {
+        Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(UUID.fromString(id));
+        return employeeOptional.isPresent();
     }
 
     public boolean isEmployeeExist(Employee employee) {
-        try {
-            Employee employeeById = getEmployeeById(employee.getId());
-            return true;
-        } catch (Exception exception) {
-            return false;
-        }
+        Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(employee.getId());
+        return employeeOptional.isPresent();
     }
 
     public void updateEmployee(Employee employee) {
         employeeRepository.updateEmployee(employee);
     }
 
-    public void updateEmployee(String id, EmployeeDto employeeDto) {
-        Employee employee = Employee
-                .builder()
-                .id(UUID.fromString(id))
-                .firstName(employeeDto.getFirstName())
-                .lastName(employeeDto.getLastName())
-                .email(employeeDto.getEmail())
-                .build();
+    public ResponseEntity<EmployeeDto> updateEmployee(String id, EmployeeDto employeeDto) {
+        if (!isEmployeeExist(id)) throw new EmployeeNotFoundException("Employee with id=" + id + " not found!");
+        Employee employee = EmployeeFactory.createEmployee(employeeDto);
         employeeRepository.updateEmployee(employee);
+        return ResponseEntity.ok(employeeDto);
     }
 
     public void deleteEmployee(Employee employee) {
         employeeRepository.deleteEmployee(employee);
+    }
+
+    public ResponseEntity<Void> deleteEmployeeUsingId(String id) {
+        Employee employee = getEmployeeById(UUID.fromString(id));
+        deleteEmployee(employee);
+        return ResponseEntity.ok().build();
     }
 
     public List<Employee> getAllEmployees() {

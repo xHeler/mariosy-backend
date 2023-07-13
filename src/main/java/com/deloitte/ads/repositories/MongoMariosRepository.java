@@ -1,7 +1,6 @@
 package com.deloitte.ads.repositories;
 
 import com.deloitte.ads.models.Marios;
-import com.deloitte.ads.repositories.interfaces.MariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;

@@ -34,7 +34,7 @@ class MariosServiceTest {
     private Employee receiver;
     private Marios marios;
 
-    @BeforeEach
+    @BeforeEach //todo: remove beforeEach | not in this case
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mariosService = new MariosService(mariosRepository, employeeService);

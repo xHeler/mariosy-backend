@@ -1,7 +1,6 @@
 package com.deloitte.ads.repositories;
 
 import com.deloitte.ads.models.Employee;
-import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Profile;
