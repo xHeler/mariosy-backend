@@ -38,7 +38,7 @@ public class MariosController {
     @PostMapping
     ResponseEntity<Void> addMarios(@RequestBody MariosDto mariosDto) {
         try {
-            Employee sender = employeeService.getEmployeeById(UUID.fromString(mariosDto.getSenderId()));
+            Employee sender = employeeService.getEmployeeById(Long.valueOf(mariosDto.getSenderId()));
             List<Employee> receivers = employeeService.getAllEmployeesByIds(mariosDto.getReceiversId());
             mariosService.addMarios(sender, receivers, mariosDto.getMessage(), mariosDto.getReaction());
             return new ResponseEntity<>(HttpStatus.OK);

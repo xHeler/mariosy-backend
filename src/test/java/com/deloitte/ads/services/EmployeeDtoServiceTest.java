@@ -1,7 +1,7 @@
 package com.deloitte.ads.services;
 
 import com.deloitte.ads.models.Employee;
-import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
+import com.deloitte.ads.repositories.MongoEmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 
 class EmployeeDtoServiceTest {
     @Mock
-    private EmployeeRepository employeeRepository;
+    private MongoEmployeeRepository employeeRepository;
 
     private EmployeeService employeeService;
 
@@ -43,7 +43,7 @@ class EmployeeDtoServiceTest {
     @Test
     void getEmployeeById_WhenEmployeeExists_ShouldReturnEmployee() throws Exception {
         // Arrange
-        UUID id = employee.getId();
+        Long id = employee.getId();
         Optional<Employee> employeeOptional = Optional.of(employee);
         when(employeeRepository.getEmployeeById(id)).thenReturn(employeeOptional);
 
@@ -57,7 +57,7 @@ class EmployeeDtoServiceTest {
     @Test
     void getEmployeeById_WhenEmployeeDoesNotExist_ShouldThrowException() {
         // Arrange
-        UUID id = UUID.randomUUID();
+        Long id = 99L;
         when(employeeRepository.getEmployeeById(id)).thenReturn(Optional.empty());
 
         // Act and Assert
@@ -68,7 +68,7 @@ class EmployeeDtoServiceTest {
     @Test
     void isEmployeeExist_WhenEmployeeExists_ShouldReturnTrue() throws Exception {
         // Arrange
-        UUID id = employee.getId();
+        Long id = employee.getId();
         when(employeeRepository.getEmployeeById(id)).thenReturn(Optional.of(employee));
 
         // Act
@@ -81,7 +81,7 @@ class EmployeeDtoServiceTest {
     @Test
     void isEmployeeExist_WhenEmployeeDoesNotExist_ShouldReturnFalse() throws Exception {
         // Arrange
-        UUID id = employee.getId();
+        Long id = employee.getId();
         when(employeeRepository.getEmployeeById(id)).thenReturn(Optional.empty());
 
         // Act

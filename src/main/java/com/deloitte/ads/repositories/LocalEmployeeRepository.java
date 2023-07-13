@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Repository
 public class LocalEmployeeRepository implements EmployeeRepository {
-    private Map<UUID, Employee> employeeMap = new HashMap<>();
+    private Map<Long, Employee> employeeMap = new HashMap<>();
 
 
     @Override
@@ -23,7 +23,7 @@ public class LocalEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public Optional<Employee> getEmployeeById(UUID id) {
+    public Optional<Employee> getEmployeeById(Long id) {
         return Optional.ofNullable(employeeMap.get(id));
     }
 
@@ -46,7 +46,7 @@ public class LocalEmployeeRepository implements EmployeeRepository {
 
     @Override
     public void updateEmployee(Employee employee) {
-        UUID id = employee.getId();
+        Long id = employee.getId();
         if (getEmployeeById(id).isPresent()) employeeMap.put(employee.getId(), employee);
     }
 

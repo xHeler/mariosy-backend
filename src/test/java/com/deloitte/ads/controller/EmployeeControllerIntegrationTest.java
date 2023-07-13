@@ -79,7 +79,7 @@ public class EmployeeControllerIntegrationTest {
                 .email("adams@example.com")
                 .build();
 
-        UUID employeeId = employee.getId();
+        Long employeeId = employee.getId();
 
         employeeService.saveEmployee(employee);
 

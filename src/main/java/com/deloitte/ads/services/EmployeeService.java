@@ -3,7 +3,7 @@ package com.deloitte.ads.services;
 import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.exceptions.EmployeeNotFoundException;
 import com.deloitte.ads.models.Employee;
-import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
+import com.deloitte.ads.repositories.MongoEmployeeRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-@RequiredArgsConstructor
 @Data
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
-    private final EmployeeRepository employeeRepository;
+
+    private final MongoEmployeeRepository employeeRepository;
 
     public void saveEmployee(Employee employee) {
         employeeRepository.saveEmployee(employee);
@@ -36,7 +36,7 @@ public class EmployeeService {
     public void saveEmployee(String id, EmployeeDto employeeDto) {
         Employee employee = Employee
                 .builder()
-                .id(UUID.fromString(id))
+                .id(Long.valueOf(id))
                 .firstName(employeeDto.getFirstName())
                 .lastName(employeeDto.getLastName())
                 .email(employeeDto.getEmail())
@@ -44,7 +44,7 @@ public class EmployeeService {
         employeeRepository.saveEmployee(employee);
     }
 
-    public Employee getEmployeeById(UUID id) throws Exception {
+    public Employee getEmployeeById(Long id) throws Exception {
         Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(id);
         if (employeeOptional.isPresent()) return employeeOptional.get();
         throw new EmployeeNotFoundException("Employee with id=" + id + "not exist!");
@@ -53,7 +53,7 @@ public class EmployeeService {
     public List<Employee> getAllEmployeesByIds(List<String> ids) throws Exception {
         List<Employee> employees = new ArrayList<>();
         for (String id : ids) {
-            employees.add(getEmployeeById(UUID.fromString(id)));
+            employees.add(getEmployeeById(Long.parseLong(id)));
         }
         return employees;
     }
@@ -81,7 +81,7 @@ public class EmployeeService {
     public void updateEmployee(String id, EmployeeDto employeeDto) {
         Employee employee = Employee
                 .builder()
-                .id(UUID.fromString(id))
+                .id(Long.valueOf(id))
                 .firstName(employeeDto.getFirstName())
                 .lastName(employeeDto.getLastName())
                 .email(employeeDto.getEmail())

@@ -1,12 +1,12 @@
 services:
-  postgres:
-    image: postgres:14.1-alpine
-    restart: always
+  mongodb:
+    image: mongo
     env_file:
       - .env
-    volumes:
-      - postgres-vol:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
 volumes:
-  postgres-vol:
+  mongodb_data:
