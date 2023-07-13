@@ -3,6 +3,7 @@ package com.deloitte.ads.repositories;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@Profile("mongo")
 public class MongoEmployeeRepository implements EmployeeRepository {
 
     private final MongoTemplate mongoTemplate;

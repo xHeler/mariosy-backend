@@ -1,11 +1,13 @@
 package com.deloitte.ads.services;
 
 import com.deloitte.ads.models.Employee;
+import com.deloitte.ads.repositories.LocalEmployeeRepository;
 import com.deloitte.ads.repositories.MongoEmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.env.Environment;
 
 import java.util.*;
 
@@ -14,11 +16,13 @@ import static org.mockito.Mockito.*;
 
 class EmployeeDtoServiceTest {
     @Mock
-    private MongoEmployeeRepository employeeRepository;
+    private LocalEmployeeRepository employeeRepository;
 
     private EmployeeService employeeService;
 
     private Employee employee;
+
+    private Environment environment;
 
     @BeforeEach
     void setUp() {

@@ -3,7 +3,9 @@ package com.deloitte.ads.services;
 import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.exceptions.EmployeeNotFoundException;
 import com.deloitte.ads.models.Employee;
+import com.deloitte.ads.repositories.LocalEmployeeRepository;
 import com.deloitte.ads.repositories.MongoEmployeeRepository;
+import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmployeeService {
 
-    private final MongoEmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     public void saveEmployee(Employee employee) {
         employeeRepository.saveEmployee(employee);
@@ -97,4 +99,5 @@ public class EmployeeService {
     public List<Employee> getAllEmployees() {
         return employeeRepository.getAllEmployees();
     }
+
 }
