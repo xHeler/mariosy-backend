@@ -28,7 +28,7 @@ public class MariosService {
         if (!employeeService.isEmployeeExist(receiver)) {
             throw new EmployeeNotFoundException("Employee = " + receiver + " does not exist!");
         }
-        if (sender.equals(receiver)) {
+        if (sender.getId().equals(receiver.getId())) {
             throw new SelfMariosException("You cannot give Marios to yourself!");
         }
 
@@ -46,8 +46,10 @@ public class MariosService {
         receivers.forEach(employee -> {
             try {
                 addMarios(sender, employee, message, reaction);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            } catch (EmployeeNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SelfMariosException e) {
+                throw new RuntimeException(e);
             }
         });
     }
