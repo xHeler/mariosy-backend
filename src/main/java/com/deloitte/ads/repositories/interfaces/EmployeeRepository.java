@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface EmployeeRepository {
     void saveEmployee(Employee employee);
 
-    Optional<Employee> getEmployeeById(Long id);
+    Optional<Employee> getEmployeeById(UUID id);
 
     List<Employee> findAllEmployeesByFirstName(String firstName);
 

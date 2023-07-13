@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/employee")
@@ -25,7 +26,7 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     ResponseEntity<String> deleteEmployee(@PathVariable("id") String id) {
         try {
-            Employee employee = employeeService.getEmployeeById(Long.valueOf(id));
+            Employee employee = employeeService.getEmployeeById(UUID.fromString(id));
             employeeService.deleteEmployee(employee);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception exception) {

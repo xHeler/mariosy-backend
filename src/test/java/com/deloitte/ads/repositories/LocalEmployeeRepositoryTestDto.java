@@ -37,7 +37,7 @@ class LocalEmployeeRepositoryTestDto {
     void getEmployeeById_WhenEmployeeExists_ShouldReturnEmployee() {
         // Arrange
         employee = Employee.builder().build();
-        Long id = employee.getId();
+        UUID id = employee.getId();
         employeeRepository.saveEmployee(employee);
 
         // Act
@@ -51,7 +51,7 @@ class LocalEmployeeRepositoryTestDto {
     @Test
     void getEmployeeById_WhenEmployeeDoesNotExist_ShouldReturnEmptyOptional() {
         // Arrange
-        Long id = 99L;
+        UUID id = UUID.randomUUID();
 
         // Act
         Optional<Employee> result = employeeRepository.getEmployeeById(id);
@@ -111,7 +111,7 @@ class LocalEmployeeRepositoryTestDto {
     void updateEmployee_ShouldUpdateEmployeeInRepository() {
         // Arrange
         employee = Employee.builder().build();
-        Long id = employee.getId();
+        UUID id = employee.getId();
         employeeRepository.saveEmployee(employee);
 
         // Act
@@ -131,7 +131,7 @@ class LocalEmployeeRepositoryTestDto {
     @Test
     void deleteEmployee_ShouldRemoveEmployeeFromRepository() {
         // Arrange
-        Long id = 99L;
+        UUID id = UUID.randomUUID();
         employee.setId(id);
         employeeRepository.saveEmployee(employee);
 

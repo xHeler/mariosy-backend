@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class MongoEmployeeRepository implements EmployeeRepository {
@@ -27,7 +28,7 @@ public class MongoEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public Optional<Employee> getEmployeeById(Long id) {
+    public Optional<Employee> getEmployeeById(UUID id) {
         return Optional.ofNullable(mongoTemplate.findById(id, Employee.class));
     }
 

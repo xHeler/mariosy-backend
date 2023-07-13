@@ -1,6 +1,5 @@
 package com.deloitte.ads.repositories;
 
-import com.deloitte.ads.exceptions.EmployeeNotFoundException;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
 import lombok.Data;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Repository
 public class LocalEmployeeRepository implements EmployeeRepository {
-    private Map<Long, Employee> employeeMap = new HashMap<>();
+    private Map<UUID, Employee> employeeMap = new HashMap<>();
 
 
     @Override
@@ -23,7 +22,7 @@ public class LocalEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public Optional<Employee> getEmployeeById(Long id) {
+    public Optional<Employee> getEmployeeById(UUID id) {
         return Optional.ofNullable(employeeMap.get(id));
     }
 
@@ -46,7 +45,7 @@ public class LocalEmployeeRepository implements EmployeeRepository {
 
     @Override
     public void updateEmployee(Employee employee) {
-        Long id = employee.getId();
+        UUID id = employee.getId();
         if (getEmployeeById(id).isPresent()) employeeMap.put(employee.getId(), employee);
     }
 

@@ -43,7 +43,7 @@ class EmployeeDtoServiceTest {
     @Test
     void getEmployeeById_WhenEmployeeExists_ShouldReturnEmployee() throws Exception {
         // Arrange
-        Long id = employee.getId();
+        UUID id = employee.getId();
         Optional<Employee> employeeOptional = Optional.of(employee);
         when(employeeRepository.getEmployeeById(id)).thenReturn(employeeOptional);
 
@@ -57,7 +57,7 @@ class EmployeeDtoServiceTest {
     @Test
     void getEmployeeById_WhenEmployeeDoesNotExist_ShouldThrowException() {
         // Arrange
-        Long id = 99L;
+        UUID id = UUID.randomUUID();
         when(employeeRepository.getEmployeeById(id)).thenReturn(Optional.empty());
 
         // Act and Assert
@@ -68,7 +68,7 @@ class EmployeeDtoServiceTest {
     @Test
     void isEmployeeExist_WhenEmployeeExists_ShouldReturnTrue() throws Exception {
         // Arrange
-        Long id = employee.getId();
+        UUID id = employee.getId();
         when(employeeRepository.getEmployeeById(id)).thenReturn(Optional.of(employee));
 
         // Act
@@ -81,7 +81,7 @@ class EmployeeDtoServiceTest {
     @Test
     void isEmployeeExist_WhenEmployeeDoesNotExist_ShouldReturnFalse() throws Exception {
         // Arrange
-        Long id = employee.getId();
+        UUID id = employee.getId();
         when(employeeRepository.getEmployeeById(id)).thenReturn(Optional.empty());
 
         // Act

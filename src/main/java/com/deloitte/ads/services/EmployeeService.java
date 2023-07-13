@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Data
 @Service
@@ -36,7 +37,7 @@ public class EmployeeService {
     public void saveEmployee(String id, EmployeeDto employeeDto) {
         Employee employee = Employee
                 .builder()
-                .id(Long.valueOf(id))
+                .id(UUID.fromString(id))
                 .firstName(employeeDto.getFirstName())
                 .lastName(employeeDto.getLastName())
                 .email(employeeDto.getEmail())
@@ -44,7 +45,7 @@ public class EmployeeService {
         employeeRepository.saveEmployee(employee);
     }
 
-    public Employee getEmployeeById(Long id) throws Exception {
+    public Employee getEmployeeById(UUID id) throws Exception {
         Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(id);
         if (employeeOptional.isPresent()) return employeeOptional.get();
         throw new EmployeeNotFoundException("Employee with id=" + id + "not exist!");
@@ -53,7 +54,7 @@ public class EmployeeService {
     public List<Employee> getAllEmployeesByIds(List<String> ids) throws Exception {
         List<Employee> employees = new ArrayList<>();
         for (String id : ids) {
-            employees.add(getEmployeeById(Long.parseLong(id)));
+            employees.add(getEmployeeById(UUID.fromString(id)));
         }
         return employees;
     }
@@ -81,7 +82,7 @@ public class EmployeeService {
     public void updateEmployee(String id, EmployeeDto employeeDto) {
         Employee employee = Employee
                 .builder()
-                .id(Long.valueOf(id))
+                .id(UUID.fromString(id))
                 .firstName(employeeDto.getFirstName())
                 .lastName(employeeDto.getLastName())
                 .email(employeeDto.getEmail())

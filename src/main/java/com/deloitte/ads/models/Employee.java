@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.UUID;
+
 
 @Data
 @NoArgsConstructor
@@ -16,7 +18,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Employee {
 
     @Id
-    private Long id;
+    @Builder.Default
+    private UUID id = UUID.randomUUID();
 
     private String firstName;
     private String lastName;

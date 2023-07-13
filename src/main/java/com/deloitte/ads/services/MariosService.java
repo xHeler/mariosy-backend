@@ -6,7 +6,7 @@ import com.deloitte.ads.exceptions.SelfMariosException;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.models.ReactionType;
-import com.deloitte.ads.repositories.interfaces.MariosRepository;
+import com.deloitte.ads.repositories.MongoMariosRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class MariosService {
-    private final MariosRepository mariosRepository;
+    private final MongoMariosRepository mariosRepository;
     private final EmployeeService employeeService;
 
     public void addMarios(Employee sender, Employee receiver, String message, ReactionType reaction) throws EmployeeNotFoundException, SelfMariosException {
