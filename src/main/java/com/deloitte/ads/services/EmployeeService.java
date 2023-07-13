@@ -44,7 +44,7 @@ public class EmployeeService {
     public Employee getEmployeeById(UUID id) {
         Optional<Employee> employeeOptional = employeeRepository.getEmployeeById(id);
         if (employeeOptional.isPresent()) return employeeOptional.get();
-        throw new EmployeeNotFoundException("Employee with id=" + id + "not exist!");
+        throw new EmployeeNotFoundException("Employee with id=" + id + " not exist!");
     }
 
     public List<Employee> getAllEmployeesByIds(List<String> ids) throws Exception {
