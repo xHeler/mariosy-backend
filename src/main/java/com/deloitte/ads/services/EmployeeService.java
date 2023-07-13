@@ -3,8 +3,6 @@ package com.deloitte.ads.services;
 import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.exceptions.EmployeeNotFoundException;
 import com.deloitte.ads.models.Employee;
-import com.deloitte.ads.repositories.LocalEmployeeRepository;
-import com.deloitte.ads.repositories.MongoEmployeeRepository;
 import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
