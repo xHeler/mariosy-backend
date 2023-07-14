@@ -46,6 +46,10 @@ public class EmployeeRetrievalService {
         return employeeOptional.isPresent();
     }
 
+    public boolean isEmployeeExist(Employee employee) {
+        return isEmployeeExist(String.valueOf(employee.getId()));
+    }
+
     public List<Employee> getAllEmployees() {
         return employeeRepository.getAllEmployees();
     }
