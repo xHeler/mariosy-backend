@@ -1,8 +1,10 @@
 package com.deloitte.ads.controller;
 
 import com.deloitte.ads.dto.EmployeeDto;
+import com.deloitte.ads.factories.EmployeeFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.services.EmployeeService;
+import com.deloitte.ads.utils.DtoConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,7 +85,7 @@ public class EmployeeControllerIntegrationTest {
 
         UUID employeeId = employee.getId();
 
-        employeeService.saveEmployee(employee);
+        employeeService.saveEmployee(DtoConverter.convertToDto(employee));
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/employee/{id}", employeeId)
                         .contentType(MediaType.APPLICATION_JSON))
