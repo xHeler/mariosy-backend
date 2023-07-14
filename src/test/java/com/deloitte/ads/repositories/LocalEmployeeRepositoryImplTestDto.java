@@ -26,7 +26,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void saveEmployee_ShouldAddEmployeeToRepository() {
+    void should_AddEmployeeToRepository_When_SaveEmployee() {
         // Act
         employeeRepository.saveEmployee(employee);
 
@@ -35,7 +35,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void getEmployeeById_WhenEmployeeExists_ShouldReturnEmployee() {
+    void should_ReturnEmployee_When_GetEmployeeById_WithExistingEmployee() {
         // Arrange
         employee = Employee.builder().build();
         UUID id = employee.getId();
@@ -50,7 +50,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void getEmployeeById_WhenEmployeeDoesNotExist_ShouldReturnEmptyOptional() {
+    void should_ReturnEmptyOptional_When_GetEmployeeById_WithNonExistingEmployee() {
         // Arrange
         UUID id = UUID.randomUUID();
 
@@ -62,7 +62,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void findAllEmployeesByFirstName_WhenEmployeesExist_ShouldReturnListOfEmployees() {
+    void should_ReturnListOfEmployees_When_FindAllEmployeesByFirstName_WithExistingEmployees() {
         // Arrange
         String firstName = "John";
         Employee employee1 = Employee
@@ -97,7 +97,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void findAllEmployeesByFirstName_WhenNoEmployeesExist_ShouldReturnEmptyList() {
+    void should_ReturnEmptyList_When_FindAllEmployeesByFirstName_WithNoEmployees() {
         // Arrange
         String firstName = "John";
 
@@ -109,7 +109,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void updateEmployee_ShouldUpdateEmployeeInRepository() {
+    void should_UpdateEmployeeInRepository_When_UpdateEmployee() {
         // Arrange
         employee = Employee.builder().build();
         UUID id = employee.getId();
@@ -130,7 +130,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void deleteEmployee_ShouldRemoveEmployeeFromRepository() {
+    void should_RemoveEmployeeFromRepository_When_DeleteEmployee() {
         // Arrange
         UUID id = UUID.randomUUID();
         employee.setId(id);
@@ -144,7 +144,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void getAllEmployees_WhenEmployeesExist_ShouldReturnListOfEmployees() {
+    void should_ReturnListOfEmployees_When_GetAllEmployees_WithExistingEmployees() {
         // Arrange
         Employee employee1 = Employee
                 .builder()
@@ -171,7 +171,7 @@ class LocalEmployeeRepositoryImplTestDto {
     }
 
     @Test
-    void getAllEmployees_WhenNoEmployeesExist_ShouldReturnEmptyList() {
+    void should_ReturnEmptyList_When_GetAllEmployees_WithNoEmployees() {
         // Act
         List<Employee> result = employeeRepository.getAllEmployees();
 

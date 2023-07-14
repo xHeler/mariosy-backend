@@ -28,7 +28,7 @@ class LocalMariosRepositoryImplTest {
     }
 
     @Test
-    void saveMarios_ShouldAddMariosToRepository() {
+    void should_AddMariosToRepository_When_SaveMarios() {
         // Act
         mariosRepository.saveMarios(marios);
 
@@ -37,7 +37,7 @@ class LocalMariosRepositoryImplTest {
     }
 
     @Test
-    void getMariosById_WhenMariosExists_ShouldReturnMarios() {
+    void should_ReturnMarios_When_GetMariosById_IfMariosExists() {
         // Arrange
         marios = Marios.builder().build();
         UUID id = marios.getId();
@@ -52,7 +52,7 @@ class LocalMariosRepositoryImplTest {
     }
 
     @Test
-    void getMariosById_WhenMariosDoesNotExist_ShouldReturnEmptyOptional() {
+    void should_ReturnEmptyOptional_When_GetMariosById_IfMariosDoesNotExist() {
         // Arrange
         UUID id = UUID.randomUUID();
 
@@ -64,7 +64,7 @@ class LocalMariosRepositoryImplTest {
     }
 
     @Test
-    void updateMarios_ShouldUpdateMariosInRepository() {
+    void should_UpdateMariosInRepository_When_UpdateMarios() {
         // Arrange
         marios = Marios.builder().build();
         UUID id = marios.getId();
@@ -79,7 +79,7 @@ class LocalMariosRepositoryImplTest {
     }
 
     @Test
-    void deleteMarios_ShouldRemoveMariosFromRepository() {
+    void should_RemoveMariosFromRepository_When_DeleteMarios() {
         // Arrange
         UUID id = UUID.randomUUID();
         marios.setId(id);
@@ -93,7 +93,7 @@ class LocalMariosRepositoryImplTest {
     }
 
     @Test
-    void getAllMarios_WhenMariosExist_ShouldReturnListOfMarios() {
+    void should_ReturnListOfMarios_When_GetAllMarios_IfMariosExist() {
         // Arrange
         Marios marios1 = Marios.builder().message("Message 1").build();
         Marios marios2 = Marios.builder().message("Message 2").build();
@@ -110,7 +110,7 @@ class LocalMariosRepositoryImplTest {
     }
 
     @Test
-    void getAllMarios_WhenNoMariosExist_ShouldReturnEmptyList() {
+    void should_ReturnEmptyList_When_GetAllMarios_IfNoMariosExist() {
         // Act
         List<Marios> result = mariosRepository.getAllMarios();
 

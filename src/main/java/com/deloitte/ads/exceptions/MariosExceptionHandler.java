@@ -10,14 +10,14 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.Date;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class MariosExceptionHandler {
 
     @ExceptionHandler({SelfMariosException.class})
     public ResponseEntity<?> handleSelfMarioException(
             SelfMariosException exception,
             WebRequest request
     ) {
-        return new ResponseEntity<>(new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false)), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorDetails(new Date().toInstant(), exception.getMessage(), request.getDescription(false)), HttpStatus.BAD_REQUEST);
 
     }
 
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
             MariosNotFoundException exception,
             WebRequest request
     ) {
-        return new ResponseEntity<>(new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false)), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorDetails(new Date().toInstant(), exception.getMessage(), request.getDescription(false)), HttpStatus.NOT_FOUND);
 
     }
 
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
             EmployeeNotFoundException exception,
             WebRequest request
     ) {
-        return new ResponseEntity<>(new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false)), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorDetails(new Date().toInstant(), exception.getMessage(), request.getDescription(false)), HttpStatus.NOT_FOUND);
 
     }
 
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
             Exception exception,
             WebRequest request
     ) {
-        return new ResponseEntity<>(new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false)), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorDetails(new Date().toInstant(), exception.getMessage(), request.getDescription(false)), HttpStatus.BAD_REQUEST);
 
     }
 }

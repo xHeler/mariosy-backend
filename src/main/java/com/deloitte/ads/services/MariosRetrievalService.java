@@ -26,7 +26,7 @@ public class MariosRetrievalService {
     }
 
     public List<Marios> getAllSentMariosByEmployeeId(String id) {
-        UUID employeeId = UUID.fromString(id);
+        UUID employeeId = getEmployeeId(id);
         return mariosRepository.getAllMarios()
                 .stream()
                 .filter(marios -> marios.getSender().getId().equals(employeeId))
@@ -34,10 +34,23 @@ public class MariosRetrievalService {
     }
 
     public List<Marios> getAllReceiveMariosByEmployeeId(String id) {
-        UUID employeeId = UUID.fromString(id);
-        return mariosRepository.getAllMarios()
+        UUID employeeId = getEmployeeId(id);
+        List<Marios> allMarios = mariosRepository.getAllMarios();
+        return filterByEmployeeId(employeeId, allMarios);
+    }
+
+    private static UUID getEmployeeId(String id) {
+        return UUID.fromString(id);
+    }
+
+    private static List<Marios> filterByEmployeeId(UUID employeeId, List<Marios> allMarios) {
+        return allMarios
                 .stream()
-                .filter(marios -> marios.getReceiver().getId().equals(employeeId))
+                .filter(marios -> isEqualReceiverId(employeeId, marios))
                 .collect(Collectors.toList());
+    }
+
+    private static boolean isEqualReceiverId(UUID employeeId, Marios marios) {
+        return marios.getReceiver().getId().equals(employeeId);
     }
 }

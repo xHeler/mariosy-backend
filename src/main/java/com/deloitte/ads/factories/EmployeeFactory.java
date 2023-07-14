@@ -6,7 +6,10 @@ import com.deloitte.ads.models.Employee;
 import java.util.UUID;
 
 
-public class EmployeeFactory {
+public final class EmployeeFactory {
+
+    private EmployeeFactory() {
+    }
 
     public static Employee createEmployee() {
         return Employee.builder().build();

@@ -8,21 +8,25 @@ import com.deloitte.ads.utils.DtoConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeCreationService {
 
     private final EmployeeRepository employeeRepository;
 
     public ResponseEntity<EmployeeDto> saveEmployee(EmployeeDto employeeDto) {
-        // todo: check employees with the same email
+        log.info("Saving employee: {}", employeeDto);
+        //todo: check user with this email exist
         Employee employee = EmployeeFactory.createEmployee(employeeDto);
         employeeRepository.saveEmployee(employee);
         return ResponseEntity.ok(employeeDto);
     }
 
     public ResponseEntity<EmployeeDto> saveEmployee(String id, EmployeeDto employeeDto) {
+        log.info("Saving employee with ID: {}, data: {}", id, employeeDto);
         Employee employee = EmployeeFactory.createEmployee(id, employeeDto);
         employeeRepository.saveEmployee(employee);
         return ResponseEntity.ok(DtoConverter.convertToDto(employee));

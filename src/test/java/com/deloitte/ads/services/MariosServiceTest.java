@@ -40,7 +40,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void addMariosFromDto_ShouldReturnOkResponse() {
+    void should_ReturnOkResponse_When_AddMariosFromDto() {
         // Given
         Employee sender = EmployeeFactory.createEmployee("John", "Doe");
         Employee receiver = EmployeeFactory.createEmployee("Alan", "Tate");
@@ -60,7 +60,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void getMariosById_ShouldCallRetrievalService() {
+    void should_CallRetrievalService_When_GetMariosById() {
         // Given
         UUID mariosId = UUID.randomUUID();
         Marios expectedMarios = new Marios(/* initialize with necessary values */);
@@ -75,7 +75,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void updateMarios_ShouldCallManagementService() {
+    void should_CallManagementService_When_UpdateMarios() {
         // Given
         Marios marios = new Marios(/* initialize with necessary values */);
 
@@ -87,7 +87,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void updateMariosById_ShouldCallRetrievalAndManagementServices() {
+    void should_CallRetrievalAndManagementServices_When_UpdateMariosById() {
         // Given
         UUID mariosUUID = UUID.randomUUID();
         Marios expectedMarios = new Marios(/* initialize with necessary values */);
@@ -103,7 +103,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void deleteMarios_ShouldCallManagementService() {
+    void should_CallManagementService_When_DeleteMarios() {
         // Given
         Marios marios = new Marios(/* initialize with necessary values */);
 
@@ -115,7 +115,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void removeMariosById_ShouldCallRetrievalAndManagementServices() {
+    void should_CallRetrievalAndManagementServices_When_RemoveMariosById() {
         // Given
         UUID mariosUUID = UUID.randomUUID();
         Marios expectedMarios = new Marios(/* initialize with necessary values */);
@@ -131,7 +131,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void getAllMarios_ShouldReturnListOfMarios() {
+    void should_ReturnListOfMarios_When_GetAllMarios() {
         // Given
         List<Marios> expectedMariosList = List.of(new Marios(/* initialize with necessary values */));
         when(retrievalService.getAllMarios()).thenReturn(expectedMariosList);
@@ -146,7 +146,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void getAllSentMariosByEmployeeId_ShouldReturnListOfMarios() {
+    void should_ReturnListOfMarios_When_GetAllSentMariosByEmployeeId() {
         // Given
         String employeeId = "12345";
         List<Marios> expectedSentMariosList = List.of(new Marios(/* initialize with necessary values */));
@@ -162,7 +162,7 @@ public class MariosServiceTest {
     }
 
     @Test
-    void getAllReceiveMariosByEmployeeId_ShouldReturnListOfMarios() {
+    void should_ReturnListOfMarios_When_GetAllReceiveMariosByEmployeeId() {
         // Given
         String employeeId = "12345";
         List<Marios> expectedReceiveMariosList = List.of(new Marios(/* initialize with necessary values */));

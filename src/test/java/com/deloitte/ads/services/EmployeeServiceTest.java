@@ -38,7 +38,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void saveEmployee_ShouldReturnCreatedEmployee() {
+    void should_ReturnCreatedEmployee_When_SaveEmployee() {
         // Given
         EmployeeDto employeeDto = EmployeeDto.builder().build();
         ResponseEntity<EmployeeDto> expectedResponse = new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
@@ -53,7 +53,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void saveEmployeeWithId_ShouldReturnCreatedEmployee() {
+    void should_ReturnCreatedEmployee_When_SaveEmployeeWithId() {
         // Given
         String id = UUID.randomUUID().toString();
         EmployeeDto employeeDto = EmployeeDto.builder().build();
@@ -69,7 +69,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void getEmployeeById_ShouldReturnEmployee() {
+    void should_ReturnEmployee_When_GetEmployeeById() {
         // Given
         UUID employeeId = UUID.randomUUID();
         Employee expectedEmployee = new Employee(/* initialize with necessary values */);
@@ -84,7 +84,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void getAllEmployeesByIds_ShouldReturnListOfEmployees() {
+    void should_ReturnListOfEmployees_When_GetAllEmployeesByIds() {
         // Given
         List<String> employeeIds = Arrays.asList("1", "2", "3");
         List<Employee> expectedEmployees = List.of(new Employee(/* initialize with necessary values */));
@@ -99,7 +99,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void findEmployeeByQuery_ShouldReturnListOfEmployees() {
+    void should_ReturnListOfEmployees_When_FindEmployeeByQuery() {
         // Given
         String query = "John";
         List<Employee> expectedEmployees = List.of(new Employee(/* initialize with necessary values */));
@@ -115,7 +115,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void updateEmployee_ShouldCallManagementService() {
+    void should_CallManagementService_When_UpdateEmployee() {
         // Given
         Employee employee = new Employee(/* initialize with necessary values */);
 
@@ -127,7 +127,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void updateEmployeeById_ShouldReturnUpdatedEmployee() {
+    void should_ReturnUpdatedEmployee_When_UpdateEmployeeById() {
         // Given
         String employeeId = UUID.randomUUID().toString();
         EmployeeDto employeeDto = EmployeeDto.builder().build();
@@ -143,7 +143,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void deleteEmployee_ShouldCallManagementService() {
+    void should_CallManagementService_When_DeleteEmployee() {
         // Given
         Employee employee = new Employee(/* initialize with necessary values */);
 
@@ -155,7 +155,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void deleteEmployeeUsingId_ShouldReturnOkResponse() {
+    void should_ReturnOkResponse_When_DeleteEmployeeUsingId() {
         // Given
         String employeeId = "12345";
         ResponseEntity<Void> expectedResponse = new ResponseEntity<>(HttpStatus.OK);
@@ -170,7 +170,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void getAllEmployees_ShouldReturnListOfEmployees() {
+    void should_ReturnListOfEmployees_When_GetAllEmployees() {
         // Given
         List<Employee> expectedEmployees = List.of(new Employee(/* initialize with necessary values */));
         when(retrievalService.getAllEmployees()).thenReturn(expectedEmployees);

@@ -37,7 +37,7 @@ public class EmployeeControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    void getAllEmployees_ShouldReturnListOfEmployees() throws Exception {
+    void should_ReturnListOfEmployees_When_GetAllEmployees() throws Exception { //todo: start naming "should..."
         // Given
         List<Employee> employees = List.of(
                 EmployeeFactory.createEmployee("John", "Doe"),
@@ -63,7 +63,7 @@ public class EmployeeControllerIntegrationTest {
     }
 
     @Test
-    void deleteEmployee_ShouldReturnNoContent() throws Exception {
+    void should_ReturnNoContent_When_DeleteEmployee() throws Exception {
         // Given
         String id = "1";
         when(employeeService.deleteEmployeeUsingId(id)).thenReturn(ResponseEntity.noContent().build());
@@ -77,7 +77,7 @@ public class EmployeeControllerIntegrationTest {
     }
 
     @Test
-    void addEmployee_ShouldReturnCreatedEmployee() throws Exception {
+    void should_ReturnCreatedEmployee_When_AddEmployee() throws Exception {
         // Given
         ObjectMapper objectMapper = new ObjectMapper();
         EmployeeDto employeeDto = EmployeeDto.builder().firstName("John").lastName("Doe").build();
@@ -97,10 +97,10 @@ public class EmployeeControllerIntegrationTest {
     }
 
     @Test
-    void updateEmployee_ShouldReturnUpdatedEmployee() throws Exception {
+    void should_ReturnUpdatedEmployee_When_UpdateEmployee() throws Exception {
         // Given
-        ObjectMapper objectMapper = new ObjectMapper();
-        UUID id = UUID.randomUUID();
+        ObjectMapper objectMapper = new ObjectMapper(); //todo: reuse
+        UUID id = UUID.randomUUID(); //todo: resuse
         EmployeeDto employeeDto = EmployeeDto.builder().firstName("John").lastName("Doe").build();
         when(employeeService.updateEmployee(String.valueOf(id), employeeDto))
                 .thenReturn(ResponseEntity.ok(employeeDto));
@@ -118,7 +118,7 @@ public class EmployeeControllerIntegrationTest {
     }
 
     @Test
-    void findEmployee_ShouldReturnListOfEmployees() throws Exception {
+    void should_ReturnListOfEmployees_When_FindEmployee() throws Exception {
         // Given
         String query = "John";
         List<Employee> employees = List.of(

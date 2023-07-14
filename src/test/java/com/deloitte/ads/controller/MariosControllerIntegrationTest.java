@@ -39,7 +39,7 @@ public class MariosControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    void getAllMarios_ShouldReturnListOfMarios() throws Exception {
+    void should_ReturnListOfMarios_When_GetAllMarios() throws Exception {
         // Given
         Employee sender = EmployeeFactory.createEmployee("John", "Doe");
         Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
@@ -79,7 +79,7 @@ public class MariosControllerIntegrationTest {
     }
 
     @Test
-    void getAllSentMariosByEmployeeId_ShouldReturnListOfMarios() throws Exception {
+    void should_ReturnListOfMarios_When_GetAllSentMariosByEmployeeId() throws Exception {
         // Given
         Employee sender = EmployeeFactory.createEmployee("John", "Doe");
         Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
@@ -90,7 +90,7 @@ public class MariosControllerIntegrationTest {
                 MariosFactory.createMarios(sender, receiver, "message 1", reaction),
                 MariosFactory.createMarios(sender, receiver, "message 2", reaction),
                 MariosFactory.createMarios(sender, receiver, "message 3", reaction)
-        );
+        ); //todo: extract to method ?
         when(mariosService.getAllSentMariosByEmployeeId(employeeId)).thenReturn(ResponseEntity.ok(sentMariosList));
 
         // When & Then
@@ -113,14 +113,14 @@ public class MariosControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].receiver.firstName").value("Jane"))
                 .andExpect(jsonPath("$[1].receiver.lastName").value("Smith"))
                 .andExpect(jsonPath("$[1].message").value("message 2"))
-                .andExpect(jsonPath("$[1].reaction").value("THANK_YOU"));
+                .andExpect(jsonPath("$[1].reaction").value("THANK_YOU")); //todo: assert using one equals
 
         // Verify
         verify(mariosService).getAllSentMariosByEmployeeId(employeeId);
     }
 
     @Test
-    void getAllReceiveMariosByEmployeeId_ShouldReturnListOfMarios() throws Exception {
+    void should_ReturnListOfMarios_When_GetAllReceiveMariosByEmployeeId() throws Exception {
         // Given
         Employee sender = EmployeeFactory.createEmployee("John", "Doe");
         Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
@@ -161,7 +161,7 @@ public class MariosControllerIntegrationTest {
     }
 
     @Test
-    void addMarios_ShouldReturnOkStatus() throws Exception {
+    void should_ReturnOkStatus_When_AddMarios() throws Exception {
         // Given
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -185,7 +185,7 @@ public class MariosControllerIntegrationTest {
     }
 
     @Test
-    void removeMariosByMariosId_ShouldReturnOkStatus() throws Exception {
+    void should_ReturnOkStatus_When_RemoveMariosByMariosId() throws Exception {
         // Given
         String mariosId = String.valueOf(UUID.randomUUID());
         when(mariosService.removeMariosById(mariosId)).thenReturn(ResponseEntity.ok().build());
@@ -199,7 +199,7 @@ public class MariosControllerIntegrationTest {
     }
 
     @Test
-    void updateMarios_ShouldReturnOkStatus() throws Exception {
+    void should_ReturnOkStatus_When_UpdateMarios() throws Exception {
         // Given
         String mariosId = String.valueOf(UUID.randomUUID());
         when(mariosService.updateMariosById(mariosId)).thenReturn(ResponseEntity.ok().build());
