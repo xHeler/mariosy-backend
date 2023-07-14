@@ -1,6 +1,7 @@
-package com.deloitte.ads.repositories;
+package com.deloitte.ads.repositories.impl;
 
 import com.deloitte.ads.models.Employee;
+import com.deloitte.ads.repositories.EmployeeRepository;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Repository
 @Profile("local")
-public class LocalEmployeeRepository implements EmployeeRepository {
+public class LocalEmployeeRepositoryImpl implements EmployeeRepository {
     private Map<UUID, Employee> employeeMap = new HashMap<>();
 
 

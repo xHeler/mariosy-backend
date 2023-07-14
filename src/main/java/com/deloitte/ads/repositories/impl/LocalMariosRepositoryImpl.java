@@ -1,6 +1,7 @@
-package com.deloitte.ads.repositories;
+package com.deloitte.ads.repositories.impl;
 
 import com.deloitte.ads.models.Marios;
+import com.deloitte.ads.repositories.MariosRepository;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -12,7 +13,7 @@ import java.util.*;
 @NoArgsConstructor
 @Repository
 @Profile("local")
-public class LocalMariosRepository implements MariosRepository {
+public class LocalMariosRepositoryImpl implements MariosRepository {
     private Map<UUID, Marios> mariosMap = new HashMap<>();
 
     @Override

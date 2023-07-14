@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/marios") // todo: remove v1/
+@RequestMapping("/api/marios")
 @RequiredArgsConstructor
 public class MariosController {
     private final MariosService mariosService;

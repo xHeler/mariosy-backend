@@ -6,7 +6,7 @@ import com.deloitte.ads.exceptions.SelfMariosException;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.models.ReactionType;
-import com.deloitte.ads.repositories.MongoMariosRepository;
+import com.deloitte.ads.repositories.impl.MongoMariosRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 class MariosServiceTest {
     @Mock
-    private MongoMariosRepository mariosRepository;
+    private MongoMariosRepositoryImpl mariosRepository;
 
     @Mock
     private EmployeeService employeeService;
