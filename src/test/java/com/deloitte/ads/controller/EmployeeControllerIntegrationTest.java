@@ -29,20 +29,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(EmployeeController.class)
 public class EmployeeControllerIntegrationTest {
 
-
     @MockBean
     private EmployeeService employeeService;
 
     @Autowired
     private MockMvc mockMvc;
 
+
+    private final UUID id = UUID.randomUUID();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Test
-    void should_ReturnListOfEmployees_When_GetAllEmployees() throws Exception { //todo: start naming "should..."
+    void should_ReturnListOfEmployees_When_GetAllEmployees() throws Exception {
         // Given
-        List<Employee> employees = List.of(
-                EmployeeFactory.createEmployee("John", "Doe"),
-                EmployeeFactory.createEmployee("Jane", "Smith")
-        );
+        List<Employee> employees = createEmployees();
         UUID johnId = employees.get(0).getId();
         UUID janeId = employees.get(1).getId();
 
@@ -79,7 +79,6 @@ public class EmployeeControllerIntegrationTest {
     @Test
     void should_ReturnCreatedEmployee_When_AddEmployee() throws Exception {
         // Given
-        ObjectMapper objectMapper = new ObjectMapper();
         EmployeeDto employeeDto = EmployeeDto.builder().firstName("John").lastName("Doe").build();
         when(employeeService.saveEmployee(any(EmployeeDto.class)))
                 .thenReturn(ResponseEntity.ok(employeeDto));
@@ -99,8 +98,6 @@ public class EmployeeControllerIntegrationTest {
     @Test
     void should_ReturnUpdatedEmployee_When_UpdateEmployee() throws Exception {
         // Given
-        ObjectMapper objectMapper = new ObjectMapper(); //todo: reuse
-        UUID id = UUID.randomUUID(); //todo: resuse
         EmployeeDto employeeDto = EmployeeDto.builder().firstName("John").lastName("Doe").build();
         when(employeeService.updateEmployee(String.valueOf(id), employeeDto))
                 .thenReturn(ResponseEntity.ok(employeeDto));
@@ -121,10 +118,7 @@ public class EmployeeControllerIntegrationTest {
     void should_ReturnListOfEmployees_When_FindEmployee() throws Exception {
         // Given
         String query = "John";
-        List<Employee> employees = List.of(
-                EmployeeFactory.createEmployee("John", "Doe"),
-                EmployeeFactory.createEmployee("Johnny", "Smith")
-        );
+        List<Employee> employees = createEmployees();
         UUID johnId = employees.get(0).getId();
         UUID johnnyId = employees.get(1).getId();
 
@@ -143,5 +137,12 @@ public class EmployeeControllerIntegrationTest {
 
         // Verify
         verify(employeeService).findEmployeeByQuery(query);
+    }
+
+    private List<Employee> createEmployees() {
+        return List.of(
+                EmployeeFactory.createEmployee("John", "Doe"),
+                EmployeeFactory.createEmployee("Johnny", "Smith")
+        );
     }
 }
