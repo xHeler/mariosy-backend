@@ -4,7 +4,7 @@ import com.deloitte.ads.dto.MariosDto;
 import com.deloitte.ads.factories.EmployeeFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
-import com.deloitte.ads.models.ReactionType;
+import com.deloitte.ads.models.enums.ReactionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -26,5 +26,5 @@ public class Marios {
 
     private String message;
 
-    private ReactionType reaction; //todo: change to string
+    private String reaction;
 }

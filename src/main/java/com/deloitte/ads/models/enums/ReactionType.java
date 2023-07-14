@@ -1,4 +1,4 @@
-package com.deloitte.ads.models;
+package com.deloitte.ads.models.enums;
 
 public enum ReactionType {
     THANK_YOU,

@@ -1,6 +1,6 @@
 package com.deloitte.ads.dto;
 
-import com.deloitte.ads.models.ReactionType;
+import com.deloitte.ads.models.enums.ReactionType;
 import lombok.Builder;
 import lombok.Data;
 

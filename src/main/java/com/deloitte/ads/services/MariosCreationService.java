@@ -6,7 +6,7 @@ import com.deloitte.ads.exceptions.SelfMariosException;
 import com.deloitte.ads.factories.MariosFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
-import com.deloitte.ads.models.ReactionType;
+import com.deloitte.ads.models.enums.ReactionType;
 import com.deloitte.ads.repositories.MariosRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
