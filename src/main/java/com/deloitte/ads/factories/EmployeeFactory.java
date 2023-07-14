@@ -12,6 +12,13 @@ public class EmployeeFactory {
         return Employee.builder().build();
     }
 
+    public static Employee createEmployee(String firstName, String lastName) {
+        return Employee.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+    }
+
     public static Employee createEmployee(String firstName, String lastName, String email) {
         return Employee.builder()
                 .firstName(firstName)
