@@ -1,7 +1,7 @@
-package com.deloitte.ads.repositories;
+package com.deloitte.ads.repositories.impl;
 
 import com.deloitte.ads.models.Employee;
-import com.deloitte.ads.repositories.interfaces.EmployeeRepository;
+import com.deloitte.ads.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,12 +15,12 @@ import java.util.UUID;
 
 @Repository
 @Profile("mongo")
-public class MongoEmployeeRepository implements EmployeeRepository {
+public class MongoEmployeeRepositoryImpl implements EmployeeRepository {
 
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public MongoEmployeeRepository(MongoTemplate mongoTemplate) {
+    public MongoEmployeeRepositoryImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 

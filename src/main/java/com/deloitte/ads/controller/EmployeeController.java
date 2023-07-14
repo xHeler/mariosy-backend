@@ -4,60 +4,42 @@ import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/employee")
+@RequestMapping("/api/employee")
 @RequiredArgsConstructor
 public class EmployeeController {
+
     private final EmployeeService employeeService;
 
     @GetMapping
     ResponseEntity<List<Employee>> getAllEmployees() {
-        List<Employee> employees = employeeService.getAllEmployees();
-        return new ResponseEntity<>(employees, HttpStatus.OK);
+        return ResponseEntity.of(Optional.ofNullable(employeeService.getAllEmployees()));
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<String> deleteEmployee(@PathVariable("id") String id) {
-        try {
-            Employee employee = employeeService.getEmployeeById(UUID.fromString(id));
-            employeeService.deleteEmployee(employee);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    ResponseEntity<Void> deleteEmployee(@PathVariable("id") String id) {
+        return employeeService.deleteEmployeeUsingId(id);
     }
 
     @PostMapping
     ResponseEntity<EmployeeDto> addEmployee(@RequestBody EmployeeDto employeeDto) {
-        employeeService.saveEmployee(employeeDto);
-        return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
+        return employeeService.saveEmployee(employeeDto);
     }
 
     @PutMapping("/{id}")
     ResponseEntity<EmployeeDto> updateEmployee(@PathVariable String id, @RequestBody EmployeeDto employeeDto) {
-        try {
-            employeeService.updateEmployee(id, employeeDto);
-            return new ResponseEntity<>(employeeDto, HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return employeeService.updateEmployee(id, employeeDto);
     }
 
     @GetMapping("/search")
-    ResponseEntity<List<Employee>> searchEmployee(@RequestParam("q") String query) {
-        try {
-            List<Employee> employees = employeeService.findEmployeeByQuery(query);
-            return new ResponseEntity<>(employees, HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+    ResponseEntity<List<Employee>> findEmployee(@RequestParam("q") String query) {
+        return employeeService.findEmployeeByQuery(query);
     }
 
 }

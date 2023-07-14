@@ -1,90 +1,60 @@
 package com.deloitte.ads.services;
 
-import com.deloitte.ads.exceptions.EmployeeNotFoundException;
-import com.deloitte.ads.exceptions.MariosNotFoundException;
-import com.deloitte.ads.exceptions.SelfMariosException;
-import com.deloitte.ads.models.Employee;
+import com.deloitte.ads.dto.MariosDto;
 import com.deloitte.ads.models.Marios;
-import com.deloitte.ads.models.ReactionType;
-import com.deloitte.ads.repositories.interfaces.MariosRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class MariosService {
-    private final MariosRepository mariosRepository;
-    private final EmployeeService employeeService;
+    private final MariosCreationService creationService;
+    private final MariosRetrievalService retrievalService;
+    private final MariosManagementService managementService;
 
-    public void addMarios(Employee sender, Employee receiver, String message, ReactionType reaction) throws EmployeeNotFoundException, SelfMariosException {
-        if (!employeeService.isEmployeeExist(sender)) {
-            throw new EmployeeNotFoundException("Employee = " + sender + " does not exist!");
-        }
-        if (!employeeService.isEmployeeExist(receiver)) {
-            throw new EmployeeNotFoundException("Employee = " + receiver + " does not exist!");
-        }
-        if (sender.getId().equals(receiver.getId())) {
-            throw new SelfMariosException("You cannot give Marios to yourself!");
-        }
-
-        Marios marios = Marios.builder()
-                .message(message)
-                .reaction(reaction)
-                .sender(sender)
-                .receiver(receiver)
-                .build();
-        saveMarios(marios);
+    public ResponseEntity<?> addMariosFromDto(MariosDto mariosDto) {
+        creationService.addMariosFromDto(mariosDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public void addMarios(Employee sender, List<Employee> receivers, String message, ReactionType reaction) {
-        // todo: should be in a transaction
-        receivers.forEach(employee -> {
-            try {
-                addMarios(sender, employee, message, reaction);
-            } catch (EmployeeNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (SelfMariosException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    public void saveMarios(Marios marios) {
-        mariosRepository.saveMarios(marios);
-    }
-
-    public Marios getMariosById(UUID id) throws MariosNotFoundException {
-        Optional<Marios> mariosOptional = mariosRepository.getMariosById(id);
-        if (mariosOptional.isPresent()) {
-            return mariosOptional.get();
-        }
-        throw new MariosNotFoundException("Marios with id=" + id + " does not exist!");
+    public Marios getMariosById(UUID id) {
+        return retrievalService.getMariosById(id);
     }
 
     public void updateMarios(Marios marios) {
-        mariosRepository.updateMarios(marios);
+        managementService.updateMarios(marios);
+    }
+
+    public ResponseEntity<?> updateMariosById(String mariosId) {
+        Marios marios = getMariosById(UUID.fromString(mariosId));
+        updateMarios(marios);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public void deleteMarios(Marios marios) {
-        mariosRepository.deleteMarios(marios);
+        managementService.deleteMarios(marios);
     }
 
-    public List<Marios> getAllMarios() {
-        return mariosRepository.getAllMarios();
+    public ResponseEntity<?> removeMariosById(String mariosId) {
+        Marios marios = getMariosById(UUID.fromString(mariosId));
+        deleteMarios(marios);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public List<Marios> getAllSentMariosByEmployeeId(String id) {
-        UUID uuid = UUID.fromString(id);
-        return mariosRepository.getAllMarios().stream().filter(e -> e.getSender().getId().equals(uuid)).collect(Collectors.toList());
+    public ResponseEntity<List<Marios>> getAllMarios() {
+        return ResponseEntity.ok(retrievalService.getAllMarios());
     }
 
-    public List<Marios> getAllReceiveMariosByEmployeeId(String id) {
-        UUID uuid = UUID.fromString(id);
-        return mariosRepository.getAllMarios().stream().filter(e -> e.getReceiver().getId().equals(uuid)).collect(Collectors.toList());
+    public ResponseEntity<List<Marios>> getAllSentMariosByEmployeeId(String id) {
+        return ResponseEntity.ok(retrievalService.getAllSentMariosByEmployeeId(id));
+    }
+
+    public ResponseEntity<List<Marios>> getAllReceiveMariosByEmployeeId(String id) {
+        return ResponseEntity.ok(retrievalService.getAllReceiveMariosByEmployeeId(id));
     }
 }

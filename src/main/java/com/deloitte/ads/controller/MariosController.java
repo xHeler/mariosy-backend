@@ -1,72 +1,48 @@
 package com.deloitte.ads.controller;
 
 import com.deloitte.ads.dto.MariosDto;
-import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
-import com.deloitte.ads.services.EmployeeService;
 import com.deloitte.ads.services.MariosService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/marios")
+@RequestMapping("/api/marios")
 @RequiredArgsConstructor
 public class MariosController {
     private final MariosService mariosService;
-    private final EmployeeService employeeService;
 
     @GetMapping
     ResponseEntity<List<Marios>> getAllMarios() {
-        return new ResponseEntity<>(mariosService.getAllMarios(), HttpStatus.OK);
+        return mariosService.getAllMarios();
     }
 
-    @GetMapping("/sent/{id}")
-    ResponseEntity<List<Marios>> getAllSentMariosByEmployeeId(@PathVariable String id) {
-        return new ResponseEntity<>(mariosService.getAllSentMariosByEmployeeId(id), HttpStatus.OK);
+    @GetMapping("/sent/{employeeId}")
+    ResponseEntity<List<Marios>> getAllSentMariosByEmployeeId(@PathVariable String employeeId) {
+        return mariosService.getAllSentMariosByEmployeeId(employeeId);
     }
 
-    @GetMapping("/receive/{id}")
-    ResponseEntity<List<Marios>> getAllReceiveMariosByEmployeeId(@PathVariable String id) {
-        return new ResponseEntity<>(mariosService.getAllReceiveMariosByEmployeeId(id), HttpStatus.OK);
+    @GetMapping("/receive/{employeeId}")
+    ResponseEntity<List<Marios>> getAllReceiveMariosByEmployeeId(@PathVariable String employeeId) {
+        return mariosService.getAllReceiveMariosByEmployeeId(employeeId);
     }
 
     @PostMapping
-    ResponseEntity<Void> addMarios(@RequestBody MariosDto mariosDto) {
-        try {
-            Employee sender = employeeService.getEmployeeById(UUID.fromString(mariosDto.getSenderId()));
-            List<Employee> receivers = employeeService.getAllEmployeesByIds(mariosDto.getReceiversId());
-            mariosService.addMarios(sender, receivers, mariosDto.getMessage(), mariosDto.getReaction());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    ResponseEntity<?> addMarios(@RequestBody MariosDto mariosDto) {
+        return mariosService.addMariosFromDto(mariosDto);
     }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<Void> removeMarios(@PathVariable String id) {
-        try {
-            Marios marios = mariosService.getMariosById(UUID.fromString(id));
-            mariosService.deleteMarios(marios);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping("/{mariosId}")
+    ResponseEntity<?> removeMariosByMariosId(@PathVariable String mariosId) {
+        return mariosService.removeMariosById(mariosId);
     }
 
-    @PutMapping("/{id}")
-    ResponseEntity<Void> updateMarios(@PathVariable String id) {
-        try {
-            Marios marios = mariosService.getMariosById(UUID.fromString(id));
-            mariosService.updateMarios(marios);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PutMapping("/{mariosId}")
+    ResponseEntity<?> updateMarios(@PathVariable String mariosId) {
+        return mariosService.updateMariosById(mariosId);
     }
 
 }

@@ -1,184 +1,214 @@
 package com.deloitte.ads.controller;
 
 import com.deloitte.ads.dto.MariosDto;
+import com.deloitte.ads.factories.EmployeeFactory;
+import com.deloitte.ads.factories.MariosFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.models.ReactionType;
-import com.deloitte.ads.services.EmployeeService;
 import com.deloitte.ads.services.MariosService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(MockitoExtension.class)
 @WebMvcTest(MariosController.class)
 public class MariosControllerIntegrationTest {
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @MockBean
     private MariosService mariosService;
 
-    @MockBean
-    private EmployeeService employeeService;
+    @Autowired
+    private MockMvc mockMvc;
 
-    private Employee sender;
-    private Employee receiver;
+    @Test
+    void getAllMarios_ShouldReturnListOfMarios() throws Exception {
+        // Given
+        Employee sender = EmployeeFactory.createEmployee("John", "Doe");
+        Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
+        ReactionType reaction = ReactionType.IMPRESSIVE;
 
-    private Marios marios1;
-    private Marios marios2;
+        List<Marios> mariosList = List.of(
+                MariosFactory.createMarios(sender, receiver, "message 1", reaction),
+                MariosFactory.createMarios(sender, receiver, "message 2", reaction),
+                MariosFactory.createMarios(sender, receiver, "message 3", reaction)
+        );
+        when(mariosService.getAllMarios()).thenReturn(ResponseEntity.ok(mariosList));
 
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        sender = Employee.builder().build();
-        receiver = Employee.builder().build();
+        // When & Then
+        mockMvc.perform(get("/api/marios"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").exists())
+                .andExpect(jsonPath("$[0].sender.id").exists())
+                .andExpect(jsonPath("$[0].sender.firstName").value("John"))
+                .andExpect(jsonPath("$[0].sender.lastName").value("Doe"))
+                .andExpect(jsonPath("$[0].receiver.id").exists())
+                .andExpect(jsonPath("$[0].receiver.firstName").value("Jane"))
+                .andExpect(jsonPath("$[0].receiver.lastName").value("Smith"))
+                .andExpect(jsonPath("$[0].message").value("message 1"))
+                .andExpect(jsonPath("$[0].reaction").value("IMPRESSIVE"))
+                .andExpect(jsonPath("$[1].id").exists())
+                .andExpect(jsonPath("$[1].sender.id").exists())
+                .andExpect(jsonPath("$[1].sender.firstName").value("John"))
+                .andExpect(jsonPath("$[1].sender.lastName").value("Doe"))
+                .andExpect(jsonPath("$[1].receiver.id").exists())
+                .andExpect(jsonPath("$[1].receiver.firstName").value("Jane"))
+                .andExpect(jsonPath("$[1].receiver.lastName").value("Smith"))
+                .andExpect(jsonPath("$[1].message").value("message 2"))
+                .andExpect(jsonPath("$[1].reaction").value("IMPRESSIVE"));
 
-        marios1 = Marios
-                .builder()
-                .sender(sender)
-                .receiver(receiver)
-                .message("test")
-                .reaction(ReactionType.GOOD_JOB)
-                .build();
-        marios2 = Marios
-                .builder()
-                .sender(sender)
-                .receiver(receiver)
-                .message("test2")
-                .reaction(ReactionType.AWESOME)
-                .build();
+        // Verify
+        verify(mariosService).getAllMarios();
     }
 
     @Test
-    public void testGetAllMarios() throws Exception {
-        List<Marios> mariosList = Arrays.asList(marios1, marios2);
-
-        when(mariosService.getAllMarios()).thenReturn(mariosList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/marios")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(marios1.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].receiver.id").value(marios1.getReceiver().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].sender.id").value(marios1.getSender().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].message").value(marios1.getMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].reaction").value(marios1.getReaction().name()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(marios2.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].receiver.id").value(marios2.getReceiver().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].sender.id").value(marios2.getSender().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].message").value(marios2.getMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].reaction").value(marios2.getReaction().name()));
-    }
-
-    @Test
-    public void testAddMarios() throws Exception {
-
-        MariosDto mariosDto = MariosDto
-                .builder()
-                .message("test")
-                .senderId(sender.getId().toString())
-                .receiversId(Collections.singletonList(receiver.getId().toString()))
-                .reaction(ReactionType.IMPRESSIVE)
-                .build();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String mariosDtoJson = objectMapper.writeValueAsString(mariosDto);
-
-        when(employeeService.getEmployeeById(sender.getId())).thenReturn(sender);
-        when(employeeService.getAllEmployeesByIds(mariosDto.getReceiversId())).thenReturn(List.of(receiver));
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/marios")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mariosDtoJson))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        verify(mariosService).addMarios(sender, Collections.singletonList(receiver), mariosDto.getMessage(), mariosDto.getReaction());
-    }
-
-
-    @Test
-    public void testRemoveMarios() throws Exception {
-        UUID mariosId = marios1.getId();
-
-        when(mariosService.getMariosById(mariosId)).thenReturn(marios1);
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/marios/{id}", mariosId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        // Verify that the deleteMarios method is called with the correct marios ID
-        verify(mariosService).deleteMarios(eq(marios1));
-    }
-
-    @Test
-    public void testUpdateMarios() throws Exception {
-        UUID mariosId = marios1.getId();
-
-        when(mariosService.getMariosById(mariosId)).thenReturn(marios1);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/marios/{id}", mariosId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        // Verify that the updateMarios method is called with the correct marios ID
-        verify(mariosService).updateMarios(eq(marios1));
-    }
-
-    @Test
-    public void testGetAllSentMariosByEmployeeId() throws Exception {
-        List<Marios> sentMarios = Arrays.asList(marios1, marios2);
+    void getAllSentMariosByEmployeeId_ShouldReturnListOfMarios() throws Exception {
+        // Given
+        Employee sender = EmployeeFactory.createEmployee("John", "Doe");
+        Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
+        ReactionType reaction = ReactionType.THANK_YOU;
         String employeeId = sender.getId().toString();
 
-        when(mariosService.getAllSentMariosByEmployeeId(employeeId)).thenReturn(sentMarios);
+        List<Marios> sentMariosList = List.of(
+                MariosFactory.createMarios(sender, receiver, "message 1", reaction),
+                MariosFactory.createMarios(sender, receiver, "message 2", reaction),
+                MariosFactory.createMarios(sender, receiver, "message 3", reaction)
+        );
+        when(mariosService.getAllSentMariosByEmployeeId(employeeId)).thenReturn(ResponseEntity.ok(sentMariosList));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/marios/sent/{id}", employeeId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].message", Matchers.is("test")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].reaction", Matchers.is("GOOD_JOB")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].message", Matchers.is("test2")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].reaction", Matchers.is("AWESOME")));
+        // When & Then
+        mockMvc.perform(get("/api/marios/sent/{employeeId}", employeeId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").exists())
+                .andExpect(jsonPath("$[0].sender.id").exists())
+                .andExpect(jsonPath("$[0].sender.firstName").value("John"))
+                .andExpect(jsonPath("$[0].sender.lastName").value("Doe"))
+                .andExpect(jsonPath("$[0].receiver.id").exists())
+                .andExpect(jsonPath("$[0].receiver.firstName").value("Jane"))
+                .andExpect(jsonPath("$[0].receiver.lastName").value("Smith"))
+                .andExpect(jsonPath("$[0].message").value("message 1"))
+                .andExpect(jsonPath("$[0].reaction").value("THANK_YOU"))
+                .andExpect(jsonPath("$[1].id").exists())
+                .andExpect(jsonPath("$[1].sender.id").exists())
+                .andExpect(jsonPath("$[1].sender.firstName").value("John"))
+                .andExpect(jsonPath("$[1].sender.lastName").value("Doe"))
+                .andExpect(jsonPath("$[1].receiver.id").exists())
+                .andExpect(jsonPath("$[1].receiver.firstName").value("Jane"))
+                .andExpect(jsonPath("$[1].receiver.lastName").value("Smith"))
+                .andExpect(jsonPath("$[1].message").value("message 2"))
+                .andExpect(jsonPath("$[1].reaction").value("THANK_YOU"));
 
-        verify(mariosService, Mockito.times(1)).getAllSentMariosByEmployeeId(employeeId);
-        verifyNoMoreInteractions(mariosService);
+        // Verify
+        verify(mariosService).getAllSentMariosByEmployeeId(employeeId);
     }
 
     @Test
-    public void testGetAllReceiveMariosByEmployeeId() throws Exception {
-        List<Marios> receiveMarios = Arrays.asList(marios1, marios2);
+    void getAllReceiveMariosByEmployeeId_ShouldReturnListOfMarios() throws Exception {
+        // Given
+        Employee sender = EmployeeFactory.createEmployee("John", "Doe");
+        Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
+        ReactionType reaction = ReactionType.THANK_YOU;
         String employeeId = receiver.getId().toString();
 
-        Mockito.when(mariosService.getAllReceiveMariosByEmployeeId(employeeId)).thenReturn(receiveMarios);
+        List<Marios> receiveMariosList = List.of(
+                MariosFactory.createMarios(sender, receiver, "message 1", reaction),
+                MariosFactory.createMarios(sender, receiver, "message 2", reaction),
+                MariosFactory.createMarios(sender, receiver, "message 3", reaction)
+        );
+        when(mariosService.getAllReceiveMariosByEmployeeId(employeeId)).thenReturn(ResponseEntity.ok(receiveMariosList));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/marios/receive/{id}", employeeId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].message", Matchers.is("test")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].reaction", Matchers.is("GOOD_JOB")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].message", Matchers.is("test2")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].reaction", Matchers.is("AWESOME")));
+        // When & Then
+        mockMvc.perform(get("/api/marios/receive/{employeeId}", employeeId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").exists())
+                .andExpect(jsonPath("$[0].sender.id").exists())
+                .andExpect(jsonPath("$[0].sender.firstName").value("John"))
+                .andExpect(jsonPath("$[0].sender.lastName").value("Doe"))
+                .andExpect(jsonPath("$[0].receiver.id").exists())
+                .andExpect(jsonPath("$[0].receiver.firstName").value("Jane"))
+                .andExpect(jsonPath("$[0].receiver.lastName").value("Smith"))
+                .andExpect(jsonPath("$[0].message").value("message 1"))
+                .andExpect(jsonPath("$[0].reaction").value("THANK_YOU"))
+                .andExpect(jsonPath("$[1].id").exists())
+                .andExpect(jsonPath("$[1].sender.id").exists())
+                .andExpect(jsonPath("$[1].sender.firstName").value("John"))
+                .andExpect(jsonPath("$[1].sender.lastName").value("Doe"))
+                .andExpect(jsonPath("$[1].receiver.id").exists())
+                .andExpect(jsonPath("$[1].receiver.firstName").value("Jane"))
+                .andExpect(jsonPath("$[1].receiver.lastName").value("Smith"))
+                .andExpect(jsonPath("$[1].message").value("message 2"))
+                .andExpect(jsonPath("$[1].reaction").value("THANK_YOU"));
 
-        Mockito.verify(mariosService, Mockito.times(1)).getAllReceiveMariosByEmployeeId(employeeId);
-        verifyNoMoreInteractions(mariosService);
+        // Verify
+        verify(mariosService).getAllReceiveMariosByEmployeeId(employeeId);
     }
 
+    @Test
+    void addMarios_ShouldReturnOkStatus() throws Exception {
+        // Given
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String senderId = UUID.randomUUID().toString();
+        String receiverId = UUID.randomUUID().toString();
+        String message = "Sample message";
+        ReactionType reaction = ReactionType.THANK_YOU;
+
+        MariosDto mariosDto = MariosDto.builder().senderId(senderId)
+                .receiversId(List.of(receiverId)).message(message).reaction(reaction).build();
+        when(mariosService.addMariosFromDto(any(MariosDto.class))).thenReturn(ResponseEntity.ok().build());
+
+        // When & Then
+        mockMvc.perform(post("/api/marios")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(mariosDto)))
+                .andExpect(status().isOk());
+
+        // Verify
+        verify(mariosService).addMariosFromDto(any(MariosDto.class));
+    }
+
+    @Test
+    void removeMariosByMariosId_ShouldReturnOkStatus() throws Exception {
+        // Given
+        String mariosId = String.valueOf(UUID.randomUUID());
+        when(mariosService.removeMariosById(mariosId)).thenReturn(ResponseEntity.ok().build());
+
+        // When & Then
+        mockMvc.perform(delete("/api/marios/{mariosId}", mariosId))
+                .andExpect(status().isOk());
+
+        // Verify
+        verify(mariosService).removeMariosById(mariosId);
+    }
+
+    @Test
+    void updateMarios_ShouldReturnOkStatus() throws Exception {
+        // Given
+        String mariosId = String.valueOf(UUID.randomUUID());
+        when(mariosService.updateMariosById(mariosId)).thenReturn(ResponseEntity.ok().build());
+
+        // When & Then
+        mockMvc.perform(put("/api/marios/{mariosId}", mariosId))
+                .andExpect(status().isOk());
+
+        // Verify
+        verify(mariosService).updateMariosById(mariosId);
+    }
 }

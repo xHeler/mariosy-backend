@@ -1,6 +1,7 @@
 package com.deloitte.ads.repositories;
 
 import com.deloitte.ads.models.Marios;
+import com.deloitte.ads.repositories.impl.LocalMariosRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -12,16 +13,18 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LocalMariosRepositoryTest {
+class LocalMariosRepositoryImplTest {
+
+    //todo: given/when/then
     @Mock
     private Marios marios;
 
-    private LocalMariosRepository mariosRepository;
+    private LocalMariosRepositoryImpl mariosRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        mariosRepository = new LocalMariosRepository();
+        mariosRepository = new LocalMariosRepositoryImpl();
     }
 
     @Test

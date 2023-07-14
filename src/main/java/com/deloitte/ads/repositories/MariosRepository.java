@@ -1,4 +1,4 @@
-package com.deloitte.ads.repositories.interfaces;
+package com.deloitte.ads.repositories;
 
 import com.deloitte.ads.models.Marios;
 import org.springframework.stereotype.Repository;

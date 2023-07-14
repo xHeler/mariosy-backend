@@ -1,164 +1,180 @@
 package com.deloitte.ads.services;
 
-import com.deloitte.ads.exceptions.EmployeeNotFoundException;
-import com.deloitte.ads.exceptions.MariosNotFoundException;
-import com.deloitte.ads.exceptions.SelfMariosException;
+import com.deloitte.ads.dto.MariosDto;
+import com.deloitte.ads.factories.EmployeeFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.models.ReactionType;
-import com.deloitte.ads.repositories.MongoMariosRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-class MariosServiceTest {
+public class MariosServiceTest {
+
     @Mock
-    private MongoMariosRepository mariosRepository;
+    private MariosCreationService creationService;
 
     @Mock
-    private EmployeeService employeeService;
+    private MariosRetrievalService retrievalService;
 
+    @Mock
+    private MariosManagementService managementService;
+
+    @InjectMocks
     private MariosService mariosService;
 
-    private Employee sender;
-    private Employee receiver;
-    private Marios marios;
-
     @BeforeEach
-    void setUp() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
-        mariosService = new MariosService(mariosRepository, employeeService);
-
-        sender = Employee.builder().firstName("Sender").build();
-        receiver = Employee.builder().firstName("Receiver").build();
-
-        marios = Marios.builder()
-                .id(UUID.randomUUID())
-                .message("Test message")
-                .reaction(ReactionType.GOOD_JOB)
-                .sender(sender)
-                .receiver(receiver)
-                .build();
     }
 
     @Test
-    void addMarios_WhenEmployeesExist_ShouldSaveMarios() {
-        // Arrange
-        when(employeeService.isEmployeeExist(sender)).thenReturn(true);
-        when(employeeService.isEmployeeExist(receiver)).thenReturn(true);
-        doNothing().when(mariosRepository).saveMarios(any(Marios.class));
+    void addMariosFromDto_ShouldReturnOkResponse() {
+        // Given
+        Employee sender = EmployeeFactory.createEmployee("John", "Doe");
+        Employee receiver = EmployeeFactory.createEmployee("Alan", "Tate");
+        ReactionType reaction = ReactionType.GOOD_JOB;
+        String senderId = sender.getId().toString();
+        String receiverId = receiver.getId().toString();
 
-        // Act
-        assertDoesNotThrow(() -> mariosService.addMarios(sender, receiver, "Test message", ReactionType.GOOD_JOB));
+        MariosDto mariosDto = MariosDto.builder().senderId(senderId)
+                .receiversId(List.of(receiverId)).message("message 1").reaction(reaction).build();
 
-        // Assert
-        ArgumentCaptor<Marios> mariosCaptor = ArgumentCaptor.forClass(Marios.class);
-        verify(mariosRepository, times(1)).saveMarios(mariosCaptor.capture());
+        // When
+        ResponseEntity<?> response = mariosService.addMariosFromDto(mariosDto);
 
-        Marios savedMarios = mariosCaptor.getValue();
-        assertNotNull(savedMarios);
-        assertEquals(sender, savedMarios.getSender());
-        assertEquals(receiver, savedMarios.getReceiver());
-        assertEquals("Test message", savedMarios.getMessage());
-        assertEquals(ReactionType.GOOD_JOB, savedMarios.getReaction());
-    }
-
-
-    @Test
-    void addMarios_WhenSenderEmployeeDoesNotExist_ShouldThrowEmployeeNotFoundException() {
-        // Arrange
-        when(employeeService.isEmployeeExist(sender)).thenReturn(false);
-
-        // Act and Assert
-        assertThrows(EmployeeNotFoundException.class, () ->
-                mariosService.addMarios(sender, receiver, "Test message", ReactionType.GOOD_JOB));
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(creationService).addMariosFromDto(mariosDto);
     }
 
     @Test
-    void addMarios_WhenReceiverEmployeeDoesNotExist_ShouldThrowEmployeeNotFoundException() throws EmployeeNotFoundException, SelfMariosException {
-        // Arrange
-        when(employeeService.isEmployeeExist(sender)).thenReturn(true);
-        when(employeeService.isEmployeeExist(receiver)).thenReturn(false);
+    void getMariosById_ShouldCallRetrievalService() {
+        // Given
+        UUID mariosId = UUID.randomUUID();
+        Marios expectedMarios = new Marios(/* initialize with necessary values */);
+        when(retrievalService.getMariosById(mariosId)).thenReturn(expectedMarios);
 
-        // Act and Assert
-        assertThrows(EmployeeNotFoundException.class, () ->
-                mariosService.addMarios(sender, receiver, "Test message", ReactionType.GOOD_JOB));
+        // When
+        Marios actualMarios = mariosService.getMariosById(mariosId);
+
+        // Then
+        assertEquals(expectedMarios, actualMarios);
+        verify(retrievalService).getMariosById(mariosId);
     }
 
     @Test
-    void addMarios_WhenSenderAndReceiverAreTheSame_ShouldThrowSelfMariosException() {
-        // Arrange
-        when(employeeService.isEmployeeExist(sender)).thenReturn(true);
-        when(employeeService.isEmployeeExist(receiver)).thenReturn(true);
+    void updateMarios_ShouldCallManagementService() {
+        // Given
+        Marios marios = new Marios(/* initialize with necessary values */);
 
-        // Act and Assert
-        assertThrows(SelfMariosException.class, () ->
-                mariosService.addMarios(sender, sender, "Test message", ReactionType.GOOD_JOB));
-    }
-
-    @Test
-    void getMariosById_WhenMariosExist_ShouldReturnMarios() throws MariosNotFoundException {
-        // Arrange
-        UUID id = marios.getId();
-        when(mariosRepository.getMariosById(id)).thenReturn(Optional.of(marios));
-
-        // Act
-        Marios result = mariosService.getMariosById(id);
-
-        // Assert
-        assertEquals(marios, result);
-    }
-
-    @Test
-    void getMariosById_WhenMariosDoNotExist_ShouldThrowMariosNotFoundException() {
-        // Arrange
-        UUID id = UUID.randomUUID();
-        when(mariosRepository.getMariosById(id)).thenReturn(Optional.empty());
-
-        // Act and Assert
-        assertThrows(MariosNotFoundException.class, () ->
-                mariosService.getMariosById(id));
-    }
-
-    @Test
-    void updateMarios_ShouldCallRepositoryUpdateMarios() {
-        // Act
+        // When
         mariosService.updateMarios(marios);
 
-        // Assert
-        verify(mariosRepository, times(1)).updateMarios(marios);
+        // Then
+        verify(managementService).updateMarios(marios);
     }
 
     @Test
-    void deleteMarios_ShouldCallRepositoryDeleteMarios() {
-        // Act
+    void updateMariosById_ShouldCallRetrievalAndManagementServices() {
+        // Given
+        UUID mariosUUID = UUID.randomUUID();
+        Marios expectedMarios = new Marios(/* initialize with necessary values */);
+        when(retrievalService.getMariosById(mariosUUID)).thenReturn(expectedMarios);
+
+        // When
+        ResponseEntity<?> response = mariosService.updateMariosById(mariosUUID.toString());
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(retrievalService).getMariosById(mariosUUID);
+        verify(managementService).updateMarios(expectedMarios);
+    }
+
+    @Test
+    void deleteMarios_ShouldCallManagementService() {
+        // Given
+        Marios marios = new Marios(/* initialize with necessary values */);
+
+        // When
         mariosService.deleteMarios(marios);
 
-        // Assert
-        verify(mariosRepository, times(1)).deleteMarios(marios);
+        // Then
+        verify(managementService).deleteMarios(marios);
+    }
+
+    @Test
+    void removeMariosById_ShouldCallRetrievalAndManagementServices() {
+        // Given
+        UUID mariosUUID = UUID.randomUUID();
+        Marios expectedMarios = new Marios(/* initialize with necessary values */);
+        when(retrievalService.getMariosById(mariosUUID)).thenReturn(expectedMarios);
+
+        // When
+        ResponseEntity<?> response = mariosService.removeMariosById(mariosUUID.toString());
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(retrievalService).getMariosById(mariosUUID);
+        verify(managementService).deleteMarios(expectedMarios);
     }
 
     @Test
     void getAllMarios_ShouldReturnListOfMarios() {
-        // Arrange
-        List<Marios> mariosList = Arrays.asList(marios);
-        when(mariosRepository.getAllMarios()).thenReturn(mariosList);
+        // Given
+        List<Marios> expectedMariosList = List.of(new Marios(/* initialize with necessary values */));
+        when(retrievalService.getAllMarios()).thenReturn(expectedMariosList);
 
-        // Act
-        List<Marios> result = mariosService.getAllMarios();
+        // When
+        ResponseEntity<List<Marios>> response = mariosService.getAllMarios();
 
-        // Assert
-        assertEquals(mariosList, result);
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedMariosList, response.getBody());
+        verify(retrievalService).getAllMarios();
     }
-}
 
+    @Test
+    void getAllSentMariosByEmployeeId_ShouldReturnListOfMarios() {
+        // Given
+        String employeeId = "12345";
+        List<Marios> expectedSentMariosList = List.of(new Marios(/* initialize with necessary values */));
+        when(retrievalService.getAllSentMariosByEmployeeId(employeeId)).thenReturn(expectedSentMariosList);
+
+        // When
+        ResponseEntity<List<Marios>> response = mariosService.getAllSentMariosByEmployeeId(employeeId);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedSentMariosList, response.getBody());
+        verify(retrievalService).getAllSentMariosByEmployeeId(employeeId);
+    }
+
+    @Test
+    void getAllReceiveMariosByEmployeeId_ShouldReturnListOfMarios() {
+        // Given
+        String employeeId = "12345";
+        List<Marios> expectedReceiveMariosList = List.of(new Marios(/* initialize with necessary values */));
+        when(retrievalService.getAllReceiveMariosByEmployeeId(employeeId)).thenReturn(expectedReceiveMariosList);
+
+        // When
+        ResponseEntity<List<Marios>> response = mariosService.getAllReceiveMariosByEmployeeId(employeeId);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedReceiveMariosList, response.getBody());
+        verify(retrievalService).getAllReceiveMariosByEmployeeId(employeeId);
+    }
+
+}

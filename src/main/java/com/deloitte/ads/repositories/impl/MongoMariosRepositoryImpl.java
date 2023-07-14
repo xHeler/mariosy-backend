@@ -1,7 +1,7 @@
-package com.deloitte.ads.repositories;
+package com.deloitte.ads.repositories.impl;
 
 import com.deloitte.ads.models.Marios;
-import com.deloitte.ads.repositories.interfaces.MariosRepository;
+import com.deloitte.ads.repositories.MariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,12 +13,12 @@ import java.util.UUID;
 
 @Repository
 @Profile("mongo")
-public class MongoMariosRepository implements MariosRepository {
+public class MongoMariosRepositoryImpl implements MariosRepository {
 
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public MongoMariosRepository(MongoTemplate mongoTemplate) {
+    public MongoMariosRepositoryImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 

@@ -1,6 +1,7 @@
 package com.deloitte.ads.repositories;
 
 import com.deloitte.ads.models.Employee;
+import com.deloitte.ads.repositories.impl.LocalEmployeeRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -12,16 +13,16 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LocalEmployeeRepositoryTestDto {
+class LocalEmployeeRepositoryImplTestDto {
     @Mock
     private Employee employee;
 
-    private LocalEmployeeRepository employeeRepository;
+    private LocalEmployeeRepositoryImpl employeeRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        employeeRepository = new LocalEmployeeRepository();
+        employeeRepository = new LocalEmployeeRepositoryImpl();
     }
 
     @Test
