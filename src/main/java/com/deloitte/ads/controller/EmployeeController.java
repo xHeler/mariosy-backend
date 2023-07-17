@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    ResponseEntity<EmployeeDto> addEmployee(@RequestBody EmployeeDto employeeDto) {
+    ResponseEntity<Employee> addEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
         log.info("Adding new employee: {}", employeeDto);
         return employeeService.saveEmployee(employeeDto);
     }

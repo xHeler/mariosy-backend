@@ -6,19 +6,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
+
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Validated
 @RequiredArgsConstructor
 @Slf4j
 public class EmployeeService {
 
     private final EmployeeCreationService creationService;
     private final EmployeeRetrievalService retrievalService;
-    private final EmployeeManagementService managementService;
+    private final EmployeeDataService managementService;
 
-    public ResponseEntity<EmployeeDto> saveEmployee(EmployeeDto employeeDto) {
+    public ResponseEntity<Employee> saveEmployee(EmployeeDto employeeDto) {
         log.info("Saving employee: {}", employeeDto);
         return creationService.saveEmployee(employeeDto);
     }

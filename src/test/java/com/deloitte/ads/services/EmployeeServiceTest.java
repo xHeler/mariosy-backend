@@ -2,6 +2,7 @@ package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.models.Employee;
+import com.deloitte.ads.utils.DtoConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,7 +28,7 @@ public class EmployeeServiceTest {
     private EmployeeRetrievalService retrievalService;
 
     @Mock
-    private EmployeeManagementService managementService;
+    private EmployeeDataService managementService;
 
     @InjectMocks
     private EmployeeService employeeService;
@@ -40,12 +41,13 @@ public class EmployeeServiceTest {
     @Test
     void should_ReturnCreatedEmployee_When_SaveEmployee() {
         // Given
-        EmployeeDto employeeDto = EmployeeDto.builder().build();
-        ResponseEntity<EmployeeDto> expectedResponse = new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
+        Employee employee = Employee.builder().build();
+        EmployeeDto employeeDto = DtoConverter.convertToDto(employee);
+        ResponseEntity<Employee> expectedResponse = new ResponseEntity<>(employee, HttpStatus.CREATED);
         when(creationService.saveEmployee(employeeDto)).thenReturn(expectedResponse);
 
         // When
-        ResponseEntity<EmployeeDto> response = employeeService.saveEmployee(employeeDto);
+        ResponseEntity<Employee> response = employeeService.saveEmployee(employeeDto);
 
         // Then
         assertEquals(expectedResponse, response);

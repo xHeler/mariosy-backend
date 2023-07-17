@@ -8,12 +8,14 @@ import com.deloitte.ads.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.UUID;
 
 @Service
+@Validated
 @RequiredArgsConstructor
-public class EmployeeManagementService {
+public class EmployeeDataService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeRetrievalService retrievalService;

@@ -2,7 +2,7 @@ package com.deloitte.ads.factories;
 
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
-import com.deloitte.ads.models.enums.ReactionType;
+import com.deloitte.ads.models.ReactionType;
 
 public final class MariosFactory {
 

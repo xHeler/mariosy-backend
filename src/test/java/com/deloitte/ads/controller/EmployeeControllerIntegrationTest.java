@@ -4,6 +4,7 @@ import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.factories.EmployeeFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.services.EmployeeService;
+import com.deloitte.ads.utils.DtoConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,9 +80,10 @@ public class EmployeeControllerIntegrationTest {
     @Test
     void should_ReturnCreatedEmployee_When_AddEmployee() throws Exception {
         // Given
-        EmployeeDto employeeDto = EmployeeDto.builder().firstName("John").lastName("Doe").build();
+        Employee employee = Employee.builder().firstName("John").lastName("Doe").build();
+        EmployeeDto employeeDto = DtoConverter.convertToDto(employee);
         when(employeeService.saveEmployee(any(EmployeeDto.class)))
-                .thenReturn(ResponseEntity.ok(employeeDto));
+                .thenReturn(ResponseEntity.ok(employee));
 
         // When & Then
         mockMvc.perform(post("/api/employee")
