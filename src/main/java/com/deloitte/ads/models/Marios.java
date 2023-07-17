@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -20,6 +21,9 @@ public class Marios {
     @Builder.Default
     private UUID id = UUID.randomUUID();
 
+    @Builder.Default
+    private Instant createdAt = Instant.now();
+
     private Employee sender;
 
     private Employee receiver;
@@ -27,4 +31,5 @@ public class Marios {
     private String message;
 
     private String reaction;
+
 }

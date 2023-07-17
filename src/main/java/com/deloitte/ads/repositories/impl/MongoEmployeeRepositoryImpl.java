@@ -47,6 +47,12 @@ public class MongoEmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
+    public boolean isEmployeeWithEmailExist(String email) {
+        Query query = new Query(Criteria.where("email").is(email));
+        return mongoTemplate.exists(query, Employee.class);
+    }
+
+    @Override
     public void updateEmployee(Employee employee) {
         mongoTemplate.save(employee);
     }

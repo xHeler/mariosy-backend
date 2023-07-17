@@ -18,6 +18,8 @@ public interface EmployeeRepository {
 
     List<Employee> findAllEmployeesByLastName(String lastName);
 
+    boolean isEmployeeWithEmailExist(String email);
+
     void updateEmployee(Employee employee);
 
     void deleteEmployee(Employee employee);

@@ -1,6 +1,7 @@
 package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.EmployeeDto;
+import com.deloitte.ads.exceptions.EmployeeAlreadyExistException;
 import com.deloitte.ads.factories.EmployeeFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.repositories.EmployeeRepository;
@@ -19,7 +20,8 @@ public class EmployeeCreationService {
 
     public ResponseEntity<EmployeeDto> saveEmployee(EmployeeDto employeeDto) {
         log.info("Saving employee: {}", employeeDto);
-        //todo: check user with this email exist
+        if (employeeRepository.isEmployeeWithEmailExist(employeeDto.getEmail()))
+            throw new EmployeeAlreadyExistException("Employee with this email already exist!");
         Employee employee = EmployeeFactory.createEmployee(employeeDto);
         employeeRepository.saveEmployee(employee);
         return ResponseEntity.ok(employeeDto);
@@ -31,4 +33,5 @@ public class EmployeeCreationService {
         employeeRepository.saveEmployee(employee);
         return ResponseEntity.ok(DtoConverter.convertToDto(employee));
     }
+
 }

@@ -30,18 +30,33 @@ public class LocalEmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public List<Employee> findAllEmployeesByFirstName(String firstName) {
-        return employeeMap.values().stream()
+        Collection<Employee> employees = employeeMap.values();
+        return employees.stream()
                 .filter(employee ->
-                        employee.getFirstName().toLowerCase().contains(firstName.toLowerCase()))
+                        isEmployeeWithFirstNameExist(firstName, employee))
                 .collect(Collectors.toList());
+    }
+
+    private static boolean isEmployeeWithFirstNameExist(String firstName, Employee employee) {
+        return employee.getFirstName().toLowerCase().contains(firstName.toLowerCase());
     }
 
     @Override
     public List<Employee> findAllEmployeesByLastName(String lastName) {
-        return employeeMap.values().stream()
+        Collection<Employee> employees = employeeMap.values();
+        return employees.stream()
                 .filter(employee ->
-                        employee.getLastName().toLowerCase().contains(lastName.toLowerCase()))
+                        isEmployeeWithLastNameExist(lastName, employee))
                 .collect(Collectors.toList());
+    }
+
+    private static boolean isEmployeeWithLastNameExist(String lastName, Employee employee) {
+        return employee.getLastName().toLowerCase().contains(lastName.toLowerCase());
+    }
+
+    @Override
+    public boolean isEmployeeWithEmailExist(String email) {
+        return employeeMap.values().stream().anyMatch(employee -> employee.getEmail().equals(email));
     }
 
 
