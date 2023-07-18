@@ -31,9 +31,11 @@ public class EmployeeService {
         return creationService.saveEmployee(id, employeeDto);
     }
 
-    public Employee getEmployeeById(UUID id) {
+    public ResponseEntity<Employee> getEmployeeById(String id) {
         log.info("Fetching employee by ID: {}", id);
-        return retrievalService.getEmployeeById(id);
+        UUID uuid = UUID.fromString(id);
+        Employee employee = retrievalService.getEmployeeById(uuid);
+        return ResponseEntity.ok(employee);
     }
 
     public List<Employee> getAllEmployeesByIds(List<String> ids) {

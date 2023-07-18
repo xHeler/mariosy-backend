@@ -36,7 +36,6 @@ public class EmployeeControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     private final UUID id = UUID.randomUUID();
     private final ObjectMapper objectMapper = new ObjectMapper();
 

@@ -27,6 +27,12 @@ public class EmployeeController {
         return ResponseEntity.of(Optional.ofNullable(employees));
     }
 
+    @GetMapping("/{employeeId}")
+    ResponseEntity<Employee> getEmployeeById(@PathVariable("employeeId") String employeeId) {
+        log.info("Getting employee with ID: {}", employeeId);
+        return employeeService.getEmployeeById(employeeId);
+    }
+
     @DeleteMapping("/{employeeId}")
     ResponseEntity<Void> deleteEmployee(@PathVariable("employeeId") String employeeId) {
         log.info("Deleting employee with ID: {}", employeeId);

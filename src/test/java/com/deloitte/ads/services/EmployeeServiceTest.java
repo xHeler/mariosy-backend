@@ -78,7 +78,7 @@ public class EmployeeServiceTest {
         when(retrievalService.getEmployeeById(employeeId)).thenReturn(expectedEmployee);
 
         // When
-        Employee actualEmployee = employeeService.getEmployeeById(employeeId);
+        Employee actualEmployee = employeeService.getEmployeeById(employeeId.toString()).getBody();
 
         // Then
         assertEquals(expectedEmployee, actualEmployee);
