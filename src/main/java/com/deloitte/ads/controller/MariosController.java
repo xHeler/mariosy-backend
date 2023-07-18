@@ -23,6 +23,12 @@ public class MariosController {
         return mariosService.getAllMarios();
     }
 
+    @GetMapping("/{mariosId}")
+    ResponseEntity<Marios> getMariosById(@PathVariable("mariosId") String mariosId) {
+        log.info("Get marios by ID: {}", mariosId);
+        return mariosService.getMariosById(mariosId);
+    }
+
     @GetMapping("/sent/{employeeId}")
     ResponseEntity<List<Marios>> getAllSentMariosByEmployeeId(@PathVariable String employeeId) {
         log.info("Fetching all sent Marios for employee ID: {}", employeeId);

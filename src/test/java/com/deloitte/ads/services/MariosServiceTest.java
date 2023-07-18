@@ -67,7 +67,7 @@ public class MariosServiceTest {
         when(retrievalService.getMariosById(mariosId)).thenReturn(expectedMarios);
 
         // When
-        Marios actualMarios = mariosService.getMariosById(mariosId);
+        Marios actualMarios = mariosService.getMariosById(mariosId.toString()).getBody();
 
         // Then
         assertEquals(expectedMarios, actualMarios);

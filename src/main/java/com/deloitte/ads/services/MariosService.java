@@ -24,9 +24,11 @@ public class MariosService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public Marios getMariosById(UUID id) {
+    public ResponseEntity<Marios> getMariosById(String id) {
         log.info("Fetching Marios by ID: {}", id);
-        return retrievalService.getMariosById(id);
+        UUID uuid = UUID.fromString(id);
+        Marios marios = retrievalService.getMariosById(uuid);
+        return ResponseEntity.ok(marios);
     }
 
     public void updateMarios(Marios marios) {
@@ -36,7 +38,8 @@ public class MariosService {
 
     public ResponseEntity<Void> updateMariosById(String mariosId) {
         log.info("Updating Marios by ID: {}", mariosId);
-        Marios marios = getMariosById(UUID.fromString(mariosId));
+        UUID uuid = UUID.fromString(mariosId);
+        Marios marios = retrievalService.getMariosById(uuid);
         updateMarios(marios);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -48,7 +51,8 @@ public class MariosService {
 
     public ResponseEntity<Void> removeMariosById(String mariosId) {
         log.info("Removing Marios by ID: {}", mariosId);
-        Marios marios = getMariosById(UUID.fromString(mariosId));
+        UUID uuid = UUID.fromString(mariosId);
+        Marios marios = retrievalService.getMariosById(uuid);
         deleteMarios(marios);
         return new ResponseEntity<>(HttpStatus.OK);
     }
