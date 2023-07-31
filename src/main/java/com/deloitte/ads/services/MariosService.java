@@ -2,19 +2,19 @@ package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.MariosDto;
 import com.deloitte.ads.dto.MariosElementDto;
-import com.deloitte.ads.dto.MariosListDto;
-import com.deloitte.ads.factories.MariosListDtoFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
-import com.deloitte.ads.models.ReactionType;
 import com.deloitte.ads.utils.DtoConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -116,18 +116,15 @@ public class MariosService {
 
     private MariosElementDto mapMariosToDto(Marios mario, Map<String, Employee> sendersMap, Map<String, Employee> receiversMap) {
         MariosElementDto dto = MariosElementDto.builder()
-                .senderId(mario.getSender().getId().toString())
-                .receiversId(Collections.singletonList(mario.getReceiver().getId().toString()))
-                .message(mario.getMessage())
-                .reaction(ReactionType.valueOf(mario.getReaction()))
+                .marios(DtoConverter.convertToDto(mario))
                 .build();
 
-        Employee sender = sendersMap.get(dto.getSenderId());
+        Employee sender = sendersMap.get(mario.getSender().getId().toString());
         if (sender != null) {
             dto.setSender(DtoConverter.convertToDto(sender));
         }
 
-        Employee receiver = receiversMap.get(dto.getReceiversId().get(0));
+        Employee receiver = receiversMap.get(mario.getReceiver().getId().toString());
         if (receiver != null) {
             dto.setReceiver(DtoConverter.convertToDto(receiver));
         }
