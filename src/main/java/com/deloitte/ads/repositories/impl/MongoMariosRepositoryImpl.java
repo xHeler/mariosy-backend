@@ -4,7 +4,9 @@ import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.repositories.MariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -44,6 +46,8 @@ public class MongoMariosRepositoryImpl implements MariosRepository {
 
     @Override
     public List<Marios> getAllMarios() {
-        return mongoTemplate.findAll(Marios.class);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Query query = new Query().with(sort).limit(12);
+        return mongoTemplate.find(query, Marios.class);
     }
 }

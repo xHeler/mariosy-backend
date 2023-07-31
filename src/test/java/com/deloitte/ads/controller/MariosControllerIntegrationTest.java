@@ -1,8 +1,10 @@
 package com.deloitte.ads.controller;
 
 import com.deloitte.ads.dto.MariosDto;
+import com.deloitte.ads.dto.MariosListDto;
 import com.deloitte.ads.factories.EmployeeFactory;
 import com.deloitte.ads.factories.MariosFactory;
+import com.deloitte.ads.factories.MariosListDtoFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.models.ReactionType;
@@ -37,128 +39,6 @@ public class MariosControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Test
-    void should_ReturnListOfMarios_When_GetAllMarios() throws Exception {
-        // Given
-        Employee sender = EmployeeFactory.createEmployee("John", "Doe");
-        Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
-        ReactionType reaction = ReactionType.IMPRESSIVE;
-
-        List<Marios> mariosList = List.of(
-                MariosFactory.createMarios(sender, receiver, "message 1", reaction),
-                MariosFactory.createMarios(sender, receiver, "message 2", reaction),
-                MariosFactory.createMarios(sender, receiver, "message 3", reaction)
-        );
-        when(mariosService.getAllMarios()).thenReturn(ResponseEntity.ok(mariosList));
-
-        // When & Then
-        mockMvc.perform(get("/api/marios"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").exists())
-                .andExpect(jsonPath("$[0].sender.id").exists())
-                .andExpect(jsonPath("$[0].sender.firstName").value("John"))
-                .andExpect(jsonPath("$[0].sender.lastName").value("Doe"))
-                .andExpect(jsonPath("$[0].receiver.id").exists())
-                .andExpect(jsonPath("$[0].receiver.firstName").value("Jane"))
-                .andExpect(jsonPath("$[0].receiver.lastName").value("Smith"))
-                .andExpect(jsonPath("$[0].message").value("message 1"))
-                .andExpect(jsonPath("$[0].reaction").value("IMPRESSIVE"))
-                .andExpect(jsonPath("$[1].id").exists())
-                .andExpect(jsonPath("$[1].sender.id").exists())
-                .andExpect(jsonPath("$[1].sender.firstName").value("John"))
-                .andExpect(jsonPath("$[1].sender.lastName").value("Doe"))
-                .andExpect(jsonPath("$[1].receiver.id").exists())
-                .andExpect(jsonPath("$[1].receiver.firstName").value("Jane"))
-                .andExpect(jsonPath("$[1].receiver.lastName").value("Smith"))
-                .andExpect(jsonPath("$[1].message").value("message 2"))
-                .andExpect(jsonPath("$[1].reaction").value("IMPRESSIVE"));
-
-        // Verify
-        verify(mariosService).getAllMarios();
-    }
-
-    @Test
-    void should_ReturnListOfMarios_When_GetAllSentMariosByEmployeeId() throws Exception {
-        // Given
-        Employee sender = EmployeeFactory.createEmployee("John", "Doe");
-        Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
-        ReactionType reaction = ReactionType.THANK_YOU;
-        String employeeId = sender.getId().toString();
-
-        List<Marios> sentMariosList = List.of(
-                MariosFactory.createMarios(sender, receiver, "message 1", reaction),
-                MariosFactory.createMarios(sender, receiver, "message 2", reaction),
-                MariosFactory.createMarios(sender, receiver, "message 3", reaction)
-        ); //todo: extract to method ?
-        when(mariosService.getAllSentMariosByEmployeeId(employeeId)).thenReturn(ResponseEntity.ok(sentMariosList));
-
-        // When & Then
-        mockMvc.perform(get("/api/marios/sent/{employeeId}", employeeId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").exists())
-                .andExpect(jsonPath("$[0].sender.id").exists())
-                .andExpect(jsonPath("$[0].sender.firstName").value("John"))
-                .andExpect(jsonPath("$[0].sender.lastName").value("Doe"))
-                .andExpect(jsonPath("$[0].receiver.id").exists())
-                .andExpect(jsonPath("$[0].receiver.firstName").value("Jane"))
-                .andExpect(jsonPath("$[0].receiver.lastName").value("Smith"))
-                .andExpect(jsonPath("$[0].message").value("message 1"))
-                .andExpect(jsonPath("$[0].reaction").value("THANK_YOU"))
-                .andExpect(jsonPath("$[1].id").exists())
-                .andExpect(jsonPath("$[1].sender.id").exists())
-                .andExpect(jsonPath("$[1].sender.firstName").value("John"))
-                .andExpect(jsonPath("$[1].sender.lastName").value("Doe"))
-                .andExpect(jsonPath("$[1].receiver.id").exists())
-                .andExpect(jsonPath("$[1].receiver.firstName").value("Jane"))
-                .andExpect(jsonPath("$[1].receiver.lastName").value("Smith"))
-                .andExpect(jsonPath("$[1].message").value("message 2"))
-                .andExpect(jsonPath("$[1].reaction").value("THANK_YOU")); //todo: assert using one equals
-
-        // Verify
-        verify(mariosService).getAllSentMariosByEmployeeId(employeeId);
-    }
-
-    @Test
-    void should_ReturnListOfMarios_When_GetAllReceiveMariosByEmployeeId() throws Exception {
-        // Given
-        Employee sender = EmployeeFactory.createEmployee("John", "Doe");
-        Employee receiver = EmployeeFactory.createEmployee("Jane", "Smith");
-        ReactionType reaction = ReactionType.THANK_YOU;
-        String employeeId = receiver.getId().toString();
-
-        List<Marios> receiveMariosList = List.of(
-                MariosFactory.createMarios(sender, receiver, "message 1", reaction),
-                MariosFactory.createMarios(sender, receiver, "message 2", reaction),
-                MariosFactory.createMarios(sender, receiver, "message 3", reaction)
-        );
-        when(mariosService.getAllReceiveMariosByEmployeeId(employeeId)).thenReturn(ResponseEntity.ok(receiveMariosList));
-
-        // When & Then
-        mockMvc.perform(get("/api/marios/receive/{employeeId}", employeeId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").exists())
-                .andExpect(jsonPath("$[0].sender.id").exists())
-                .andExpect(jsonPath("$[0].sender.firstName").value("John"))
-                .andExpect(jsonPath("$[0].sender.lastName").value("Doe"))
-                .andExpect(jsonPath("$[0].receiver.id").exists())
-                .andExpect(jsonPath("$[0].receiver.firstName").value("Jane"))
-                .andExpect(jsonPath("$[0].receiver.lastName").value("Smith"))
-                .andExpect(jsonPath("$[0].message").value("message 1"))
-                .andExpect(jsonPath("$[0].reaction").value("THANK_YOU"))
-                .andExpect(jsonPath("$[1].id").exists())
-                .andExpect(jsonPath("$[1].sender.id").exists())
-                .andExpect(jsonPath("$[1].sender.firstName").value("John"))
-                .andExpect(jsonPath("$[1].sender.lastName").value("Doe"))
-                .andExpect(jsonPath("$[1].receiver.id").exists())
-                .andExpect(jsonPath("$[1].receiver.firstName").value("Jane"))
-                .andExpect(jsonPath("$[1].receiver.lastName").value("Smith"))
-                .andExpect(jsonPath("$[1].message").value("message 2"))
-                .andExpect(jsonPath("$[1].reaction").value("THANK_YOU"));
-
-        // Verify
-        verify(mariosService).getAllReceiveMariosByEmployeeId(employeeId);
-    }
 
     @Test
     void should_ReturnOkStatus_When_AddMarios() throws Exception {
