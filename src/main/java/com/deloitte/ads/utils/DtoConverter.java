@@ -25,6 +25,7 @@ public class DtoConverter {
 
     public static MariosDto convertToDto(Marios mario) {
         return MariosDto.builder()
+                .title(mario.getTitle())
                 .senderId(mario.getSender().getId().toString())
                 .receiversId(List.of(mario.getReceiver().getId().toString()))
                 .message(mario.getMessage())

@@ -2,6 +2,7 @@ package com.deloitte.ads.controller;
 
 import com.deloitte.ads.dto.MariosDto;
 import com.deloitte.ads.dto.MariosElementDto;
+import com.deloitte.ads.dto.MariosListDto;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.services.MariosService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class MariosController {
     private final MariosService mariosService;
 
     @GetMapping
-    ResponseEntity<List<MariosElementDto>> getAllMarios() {
+    ResponseEntity<MariosListDto> getAllMarios() {
         log.info("Fetching all Marios");
         return mariosService.getAllMarios();
     }
@@ -31,31 +32,31 @@ public class MariosController {
     }
 
     @GetMapping("/sent/{employeeId}")
-    ResponseEntity<List<MariosElementDto>> getAllSentMariosByEmployeeId(@PathVariable String employeeId) {
+    ResponseEntity<MariosListDto> getAllSentMariosByEmployeeId(@PathVariable String employeeId) {
         log.info("Fetching all sent Marios for employee ID: {}", employeeId);
         return mariosService.getAllSentMariosByEmployeeId(employeeId);
     }
 
     @GetMapping("/receive/{employeeId}")
-    ResponseEntity<List<MariosElementDto>> getAllReceiveMariosByEmployeeId(@PathVariable String employeeId) {
+    ResponseEntity<MariosListDto> getAllReceiveMariosByEmployeeId(@PathVariable String employeeId) {
         log.info("Fetching all received Marios for employee ID: {}", employeeId);
         return mariosService.getAllReceiveMariosByEmployeeId(employeeId);
     }
 
     @PostMapping
-    ResponseEntity<?> addMarios(@RequestBody MariosDto mariosDto) {
+    ResponseEntity<Void> addMarios(@RequestBody MariosDto mariosDto) {
         log.info("Adding new Marios: {}", mariosDto);
         return mariosService.addMariosFromDto(mariosDto);
     }
 
     @DeleteMapping("/{mariosId}")
-    ResponseEntity<?> removeMariosByMariosId(@PathVariable String mariosId) {
+    ResponseEntity<Void> removeMariosByMariosId(@PathVariable String mariosId) {
         log.info("Removing Marios with ID: {}", mariosId);
         return mariosService.removeMariosById(mariosId);
     }
 
     @PutMapping("/{mariosId}")
-    ResponseEntity<?> updateMarios(@PathVariable String mariosId) {
+    ResponseEntity<Void> updateMarios(@PathVariable String mariosId) {
         log.info("Updating Marios with ID: {}", mariosId);
         return mariosService.updateMariosById(mariosId);
     }

@@ -32,4 +32,6 @@ public class Marios {
 
     private String reaction;
 
+    private String title;
+
 }

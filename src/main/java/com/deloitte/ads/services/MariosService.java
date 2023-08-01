@@ -2,6 +2,8 @@ package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.MariosDto;
 import com.deloitte.ads.dto.MariosElementDto;
+import com.deloitte.ads.dto.MariosListDto;
+import com.deloitte.ads.factories.MariosListDtoFactory;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.utils.DtoConverter;
@@ -66,25 +68,28 @@ public class MariosService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<List<MariosElementDto>> getAllMarios() {
+    public ResponseEntity<MariosListDto> getAllMarios() {
         log.info("Fetching all Marios");
         List<Marios> allMarios = retrievalService.getAllMarios();
         List<MariosElementDto> marioses = mapMariosToDto(allMarios);
-        return ResponseEntity.ok(marioses);
+        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(marioses);
+        return ResponseEntity.ok(mariosListDto);
     }
 
-    public ResponseEntity<List<MariosElementDto>> getAllSentMariosByEmployeeId(String id) {
+    public ResponseEntity<MariosListDto> getAllSentMariosByEmployeeId(String id) {
         log.info("Fetching all sent Marios for employee ID: {}", id);
         List<Marios> allSentMariosByEmployeeId = retrievalService.getAllSentMariosByEmployeeId(id);
         List<MariosElementDto> sentMarios = mapMariosToDto(allSentMariosByEmployeeId);
-        return ResponseEntity.ok(sentMarios);
+        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(sentMarios);
+        return ResponseEntity.ok(mariosListDto);
     }
 
-    public ResponseEntity<List<MariosElementDto>> getAllReceiveMariosByEmployeeId(String id) {
+    public ResponseEntity<MariosListDto> getAllReceiveMariosByEmployeeId(String id) {
         log.info("Fetching all received Marios for employee ID: {}", id);
         List<Marios> allReceivedMariosByEmployeeId = retrievalService.getAllReceiveMariosByEmployeeId(id);
         List<MariosElementDto> receivedMarios = mapMariosToDto(allReceivedMariosByEmployeeId);
-        return ResponseEntity.ok(receivedMarios);
+        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(receivedMarios);
+        return ResponseEntity.ok(mariosListDto);
     }
 
     private List<MariosElementDto> mapMariosToDto(List<Marios> allMarios) {
@@ -111,7 +116,7 @@ public class MariosService {
     private Map<String, Employee> fetchEmployees(List<String> employeeIds) {
         List<Employee> employees = employeeRetrievalService.getAllEmployeesByIds(employeeIds);
         return employees.stream()
-                .collect(Collectors.toMap(emp -> emp.getId().toString(), Function.identity()));
+                .collect(Collectors.toMap(emp -> emp.getId().toString(), Function.identity(), (existing, replacement) -> existing));
     }
 
     private MariosElementDto mapMariosToDto(Marios mario, Map<String, Employee> sendersMap, Map<String, Employee> receiversMap) {

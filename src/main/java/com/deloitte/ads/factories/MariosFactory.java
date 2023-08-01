@@ -10,8 +10,9 @@ public final class MariosFactory {
 
     }
 
-    public static Marios createMarios(Employee sender, Employee receiver, String message, ReactionType reaction) {
+    public static Marios createMarios(Employee sender, Employee receiver, String message, String title, ReactionType reaction) {
         return Marios.builder()
+                .title(title)
                 .message(message)
                 .reaction(reaction.name())
                 .sender(sender)

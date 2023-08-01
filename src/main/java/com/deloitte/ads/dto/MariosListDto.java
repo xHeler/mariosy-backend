@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @Builder
 public class MariosListDto {
-    private List<Marios> mariosList;
+    private List<MariosElementDto> mariosElementList;
     private Integer mariosSize;
 }

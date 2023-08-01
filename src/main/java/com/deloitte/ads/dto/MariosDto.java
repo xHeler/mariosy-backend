@@ -13,4 +13,5 @@ public class MariosDto {
     private List<String> receiversId;
     private String message;
     private ReactionType reaction;
+    private String title;
 }

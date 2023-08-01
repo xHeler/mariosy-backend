@@ -24,23 +24,23 @@ public class MariosCreationService {
     public void addMariosFromDto(MariosDto mariosDto) {
         Employee sender = employeeRetrievalService.getEmployeeById(UUID.fromString(mariosDto.getSenderId()));
         List<Employee> receivers = employeeRetrievalService.getAllEmployeesByIds(mariosDto.getReceiversId());
-        addMarios(sender, receivers, mariosDto.getMessage(), mariosDto.getReaction());
+        addMarios(sender, receivers, mariosDto.getMessage(), mariosDto.getTitle(), mariosDto.getReaction());
     }
 
-    public void addMarios(Employee sender, Employee receiver, String message, ReactionType reaction) {
+    public void addMarios(Employee sender, Employee receiver, String message, String title, ReactionType reaction) {
         validateEmployeesExistence(sender, receiver);
         validateNotSelfMarios(sender, receiver);
 
-        Marios marios = MariosFactory.createMarios(sender, receiver, message, reaction);
+        Marios marios = MariosFactory.createMarios(sender, receiver, message, title, reaction);
         saveMarios(marios);
     }
 
-    public void addMarios(Employee sender, List<Employee> receivers, String message, ReactionType reaction) {
+    public void addMarios(Employee sender, List<Employee> receivers, String message, String title, ReactionType reaction) {
         receivers.forEach(employee -> {
             validateEmployeesExistence(sender, employee);
             validateNotSelfMarios(sender, employee);
 
-            Marios marios = MariosFactory.createMarios(sender, employee, message, reaction);
+            Marios marios = MariosFactory.createMarios(sender, employee, message, title, reaction);
             saveMarios(marios);
         });
     }
