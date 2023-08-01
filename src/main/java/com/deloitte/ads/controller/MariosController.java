@@ -21,7 +21,7 @@ public class MariosController {
 
     @GetMapping
     ResponseEntity<MariosListDto> getAllMarios(@RequestParam(defaultValue = "0") int page,
-                                               @RequestParam(defaultValue = "10") int size) {
+                                               @RequestParam(defaultValue = "12") int size) {
         log.info("Fetching all Marios with pagination - Page: {}, Size: {}", page, size);
         return mariosService.getAllMarios(page, size);
     }
@@ -33,15 +33,19 @@ public class MariosController {
     }
 
     @GetMapping("/sent/{employeeId}")
-    ResponseEntity<MariosListDto> getAllSentMariosByEmployeeId(@PathVariable String employeeId) {
-        log.info("Fetching all sent Marios for employee ID: {}", employeeId);
-        return mariosService.getAllSentMariosByEmployeeId(employeeId);
+    ResponseEntity<MariosListDto> getAllSentMariosByEmployeeId(@RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "12") int size,
+                                                               @PathVariable String employeeId) {
+        log.info("Fetching all sent Marios for employee ID: {} with pagination - Page: {}, Size: {}", employeeId, page, size);
+        return mariosService.getAllSentMariosByEmployeeId(employeeId, page, size);
     }
 
     @GetMapping("/receive/{employeeId}")
-    ResponseEntity<MariosListDto> getAllReceiveMariosByEmployeeId(@PathVariable String employeeId) {
-        log.info("Fetching all received Marios for employee ID: {}", employeeId);
-        return mariosService.getAllReceiveMariosByEmployeeId(employeeId);
+    ResponseEntity<MariosListDto> getAllReceiveMariosByEmployeeId(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "12") int size,
+                                                                  @PathVariable String employeeId) {
+        log.info("Fetching all received Marios for employee ID: {} with pagination - Page: {}, Size: {}", employeeId, page, size);
+        return mariosService.getAllReceiveMariosByEmployeeId(employeeId, page, size);
     }
 
     @PostMapping

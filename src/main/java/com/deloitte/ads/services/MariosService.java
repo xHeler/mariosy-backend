@@ -73,19 +73,19 @@ public class MariosService {
         return ResponseEntity.ok(mariosListDto);
     }
 
-    public ResponseEntity<MariosListDto> getAllSentMariosByEmployeeId(String id) {
+    public ResponseEntity<MariosListDto> getAllSentMariosByEmployeeId(String id, int page, int size) {
         log.info("Fetching all sent Marios for employee ID: {}", id);
         List<Marios> allSentMariosByEmployeeId = retrievalService.getAllSentMariosByEmployeeId(id);
-        List<MariosElementDto> sentMarios = mapMariosToDto(allSentMariosByEmployeeId);
-        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(sentMarios);
+        List<MariosElementDto> sentMarios = getPaginatedMarios(allSentMariosByEmployeeId, page, size);
+        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(sentMarios, allSentMariosByEmployeeId.size());
         return ResponseEntity.ok(mariosListDto);
     }
 
-    public ResponseEntity<MariosListDto> getAllReceiveMariosByEmployeeId(String id) {
+    public ResponseEntity<MariosListDto> getAllReceiveMariosByEmployeeId(String id, int page, int size) {
         log.info("Fetching all received Marios for employee ID: {}", id);
         List<Marios> allReceivedMariosByEmployeeId = retrievalService.getAllReceiveMariosByEmployeeId(id);
-        List<MariosElementDto> receivedMarios = mapMariosToDto(allReceivedMariosByEmployeeId);
-        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(receivedMarios);
+        List<MariosElementDto> receivedMarios = getPaginatedMarios(allReceivedMariosByEmployeeId, page, size);
+        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(receivedMarios, allReceivedMariosByEmployeeId.size());
         return ResponseEntity.ok(mariosListDto);
     }
 
