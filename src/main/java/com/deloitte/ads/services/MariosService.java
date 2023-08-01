@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,11 +65,11 @@ public class MariosService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<MariosListDto> getAllMarios() {
+    public ResponseEntity<MariosListDto> getAllMarios(int page, int size) {
         log.info("Fetching all Marios");
         List<Marios> allMarios = retrievalService.getAllMarios();
-        List<MariosElementDto> marioses = mapMariosToDto(allMarios);
-        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(marioses);
+        List<MariosElementDto> paginatedMarios = getPaginatedMarios(allMarios, page, size);
+        MariosListDto mariosListDto = MariosListDtoFactory.createMariosListDto(paginatedMarios, allMarios.size());
         return ResponseEntity.ok(mariosListDto);
     }
 
@@ -135,5 +132,19 @@ public class MariosService {
         }
 
         return dto;
+    }
+
+    private List<MariosElementDto> getPaginatedMarios(List<Marios> mariosList, int page, int size) {
+        int totalItems = mariosList.size();
+
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, totalItems);
+
+        if (fromIndex >= totalItems) {
+            return Collections.emptyList();
+        }
+
+        List<Marios> paginatedMarios = mariosList.subList(fromIndex, toIndex);
+        return mapMariosToDto(paginatedMarios);
     }
 }

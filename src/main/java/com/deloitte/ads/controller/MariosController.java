@@ -20,9 +20,10 @@ public class MariosController {
     private final MariosService mariosService;
 
     @GetMapping
-    ResponseEntity<MariosListDto> getAllMarios() {
-        log.info("Fetching all Marios");
-        return mariosService.getAllMarios();
+    ResponseEntity<MariosListDto> getAllMarios(@RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "10") int size) {
+        log.info("Fetching all Marios with pagination - Page: {}, Size: {}", page, size);
+        return mariosService.getAllMarios(page, size);
     }
 
     @GetMapping("/{mariosId}")

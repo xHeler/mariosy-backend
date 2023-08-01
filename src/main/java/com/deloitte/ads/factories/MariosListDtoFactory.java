@@ -19,4 +19,12 @@ public class MariosListDtoFactory {
                 .build();
     }
 
+    public static MariosListDto createMariosListDto(List<MariosElementDto> mariosList, int size) {
+        return MariosListDto
+                .builder()
+                .mariosElementList(mariosList)
+                .mariosSize(size)
+                .build();
+    }
+
 }
