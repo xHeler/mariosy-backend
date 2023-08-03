@@ -135,16 +135,16 @@ public class MariosService {
     }
 
     private List<MariosElementDto> getPaginatedMarios(List<Marios> mariosList, int page, int size) {
-        int totalItems = mariosList.size();
-
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalItems);
-
-        if (fromIndex >= totalItems) {
-            return Collections.emptyList();
-        }
-
-        List<Marios> paginatedMarios = mariosList.subList(fromIndex, toIndex);
-        return mapMariosToDto(paginatedMarios);
+//        int totalItems = mariosList.size();
+//
+//        int fromIndex = page * size;
+//        int toIndex = Math.min(fromIndex + size, totalItems);
+//
+//        if (fromIndex >= totalItems) {
+//            return Collections.emptyList();
+//        }
+//
+//        List<Marios> paginatedMarios = mariosList.subList(fromIndex, toIndex);
+        return mapMariosToDto(mariosList);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Repository
 @Profile("mongo")
@@ -36,13 +37,15 @@ public class MongoEmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public List<Employee> findAllEmployeesByFirstName(String firstName) {
-        Query query = new Query(Criteria.where("firstName").is(firstName));
+        String regex = ".*" + firstName.toLowerCase() + ".*";
+        Query query = new Query(Criteria.where("firstName").regex(Pattern.compile(regex, Pattern.CASE_INSENSITIVE)));
         return mongoTemplate.find(query, Employee.class);
     }
 
     @Override
     public List<Employee> findAllEmployeesByLastName(String lastName) {
-        Query query = new Query(Criteria.where("lastName").is(lastName));
+        String regex = ".*" + lastName.toLowerCase() + ".*";
+        Query query = new Query(Criteria.where("lastName").regex(Pattern.compile(regex, Pattern.CASE_INSENSITIVE)));
         return mongoTemplate.find(query, Employee.class);
     }
 

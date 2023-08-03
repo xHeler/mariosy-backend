@@ -47,7 +47,7 @@ public class MongoMariosRepositoryImpl implements MariosRepository {
     @Override
     public List<Marios> getAllMarios() {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        Query query = new Query().with(sort).limit(12);
+        Query query = new Query().with(sort);
         return mongoTemplate.find(query, Marios.class);
     }
 }
