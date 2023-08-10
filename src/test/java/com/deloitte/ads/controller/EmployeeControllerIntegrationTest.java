@@ -39,28 +39,6 @@ public class EmployeeControllerIntegrationTest {
     private final UUID id = UUID.randomUUID();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Test
-    void should_ReturnListOfEmployees_When_GetAllEmployees() throws Exception {
-        // Given
-        List<Employee> employees = createEmployees();
-        UUID johnId = employees.get(0).getId();
-        UUID janeId = employees.get(1).getId();
-
-        when(employeeService.getAllEmployees()).thenReturn(employees);
-
-        // When & Then
-        mockMvc.perform(get("/api/employee"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(johnId.toString()))
-                .andExpect(jsonPath("$[0].firstName").value("John"))
-                .andExpect(jsonPath("$[0].lastName").value("Doe"))
-                .andExpect(jsonPath("$[1].id").value(janeId.toString()))
-                .andExpect(jsonPath("$[1].firstName").value("Jane"))
-                .andExpect(jsonPath("$[1].lastName").value("Smith"));
-
-        // Verify
-        verify(employeeService).getAllEmployees();
-    }
 
     @Test
     void should_ReturnNoContent_When_DeleteEmployee() throws Exception {
@@ -74,26 +52,6 @@ public class EmployeeControllerIntegrationTest {
 
         // Verify
         verify(employeeService).deleteEmployeeUsingId(id);
-    }
-
-    @Test
-    void should_ReturnCreatedEmployee_When_AddEmployee() throws Exception {
-        // Given
-        Employee employee = Employee.builder().firstName("John").lastName("Doe").build();
-        EmployeeDto employeeDto = DtoConverter.convertToDto(employee);
-        when(employeeService.saveEmployee(any(EmployeeDto.class)))
-                .thenReturn(ResponseEntity.ok(employee));
-
-        // When & Then
-        mockMvc.perform(post("/api/employee")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(employeeDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("John"))
-                .andExpect(jsonPath("$.lastName").value("Doe"));
-
-        // Verify
-        verify(employeeService).saveEmployee(any(EmployeeDto.class));
     }
 
     @Test

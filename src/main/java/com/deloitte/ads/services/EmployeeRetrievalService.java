@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Set;
+import java.util.LinkedHashSet;
+
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +43,10 @@ public class EmployeeRetrievalService {
         List<Employee> employees = new ArrayList<>();
         employees.addAll(employeeRepository.findAllEmployeesByFirstName(query));
         employees.addAll(employeeRepository.findAllEmployeesByLastName(query));
+        Set<Employee> uniqueEmployees = new LinkedHashSet<>(employees);
+        employees.clear();
+        employees.addAll(uniqueEmployees);
+
         return ResponseEntity.ok(employees);
     }
 
