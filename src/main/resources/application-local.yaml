@@ -1,3 +1,21 @@
+server:
+  port: 8081
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: mariosy-rest-api
+            authorization-grant-type: authorization_code
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/deloitte
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/deloitte
 springdoc:
   swagger-ui:
     path: /docs/swagger-ui
