@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 
 @Data
@@ -21,4 +22,6 @@ public class EmployeeDto {
     @NotBlank(message = "Email is required")
     private String email;
 
+    @Size(min = 5, message = "Password must be at least 6 characters long")
+    private String password;
 }

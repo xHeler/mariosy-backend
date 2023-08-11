@@ -1,11 +1,13 @@
 package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.EmployeeDto;
+import com.deloitte.ads.dto.TokenDto;
 import com.deloitte.ads.models.Employee;
+import com.deloitte.ads.utils.KeycloakAuth;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -20,10 +22,14 @@ public class EmployeeService {
     private final EmployeeCreationService creationService;
     private final EmployeeRetrievalService retrievalService;
     private final EmployeeDataService managementService;
+    private final KeycloakAuth keycloakAuth;
 
-    public ResponseEntity<Employee> saveEmployee(EmployeeDto employeeDto) {
+    public ResponseEntity<TokenDto> saveEmployee(EmployeeDto employeeDto) {
         log.info("Saving employee: {}", employeeDto);
-        return creationService.saveEmployee(employeeDto);
+        creationService.saveEmployee(employeeDto);
+        TokenDto tokenDto = keycloakAuth.authenticateWithKeycloak(employeeDto);
+        log.info("Received token from authenticator: {}", tokenDto);
+        return ResponseEntity.ok(tokenDto);
     }
 
     public ResponseEntity<EmployeeDto> saveEmployee(String id, EmployeeDto employeeDto) {

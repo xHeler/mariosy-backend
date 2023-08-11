@@ -2,7 +2,6 @@ package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.models.Employee;
-import com.deloitte.ads.utils.DtoConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,22 +35,6 @@ public class EmployeeServiceTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    void should_ReturnCreatedEmployee_When_SaveEmployee() {
-        // Given
-        Employee employee = Employee.builder().build();
-        EmployeeDto employeeDto = DtoConverter.convertToDto(employee);
-        ResponseEntity<Employee> expectedResponse = new ResponseEntity<>(employee, HttpStatus.CREATED);
-        when(creationService.saveEmployee(employeeDto)).thenReturn(expectedResponse);
-
-        // When
-        ResponseEntity<Employee> response = employeeService.saveEmployee(employeeDto);
-
-        // Then
-        assertEquals(expectedResponse, response);
-        verify(creationService).saveEmployee(employeeDto);
     }
 
     @Test

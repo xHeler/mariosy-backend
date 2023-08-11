@@ -1,6 +1,7 @@
 package com.deloitte.ads.controller;
 
 import com.deloitte.ads.dto.EmployeeDto;
+import com.deloitte.ads.dto.TokenDto;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    ResponseEntity<Employee> addEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
+    ResponseEntity<TokenDto> addEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
         log.info("Adding new employee: {}", employeeDto);
         return employeeService.saveEmployee(employeeDto);
     }

@@ -120,33 +120,6 @@
     </dependency>
   </dependencies>
 
-  <profiles>
-    <profile>
-      <id>build-docker-image</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.google.cloud.tools</groupId>
-            <artifactId>jib-maven-plugin</artifactId>
-            <configuration>
-              <to>
-                <image>docker.io/heler7/mariosy-backend:latest</image>
-              </to>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>dockerBuild</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
   <build>
     <plugins>
       <plugin>
