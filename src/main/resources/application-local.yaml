@@ -18,4 +18,4 @@ spring:
           issuer-uri: http://localhost:8080/realms/deloitte
 springdoc:
   swagger-ui:
-    path: /docs/swagger-ui
+    path: /api/docs

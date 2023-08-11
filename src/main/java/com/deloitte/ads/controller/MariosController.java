@@ -1,7 +1,7 @@
 package com.deloitte.ads.controller;
 
+import com.deloitte.ads.configuration.SecureEndpoint;
 import com.deloitte.ads.dto.MariosDto;
-import com.deloitte.ads.dto.MariosElementDto;
 import com.deloitte.ads.dto.MariosListDto;
 import com.deloitte.ads.models.Marios;
 import com.deloitte.ads.services.MariosService;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/marios")
@@ -20,6 +19,7 @@ public class MariosController {
     private final MariosService mariosService;
 
     @GetMapping
+    @SecureEndpoint
     ResponseEntity<MariosListDto> getAllMarios(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "12") int size) {
         log.info("Fetching all Marios with pagination - Page: {}, Size: {}", page, size);
