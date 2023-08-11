@@ -10,13 +10,14 @@ services:
       - mongodb_data:/data/db
   keycloak:
     image: quay.io/keycloak/keycloak:22.0.1
+    env_file:
+      - .env-keycloak
     ports:
       - "8080:8080"
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
     command:
       - start-dev
-
+    volumes:
+      - keycloak_data:/opt/keycloak/data/
 volumes:
   mongodb_data:
+  keycloak_data:

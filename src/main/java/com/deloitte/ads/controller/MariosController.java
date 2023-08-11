@@ -19,7 +19,6 @@ public class MariosController {
     private final MariosService mariosService;
 
     @GetMapping
-    @SecureEndpoint
     ResponseEntity<MariosListDto> getAllMarios(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "12") int size) {
         log.info("Fetching all Marios with pagination - Page: {}, Size: {}", page, size);
@@ -49,6 +48,7 @@ public class MariosController {
     }
 
     @PostMapping
+    @SecureEndpoint
     ResponseEntity<Void> addMarios(@RequestBody MariosDto mariosDto) {
         log.info("Adding new Marios: {}", mariosDto);
         return mariosService.addMariosFromDto(mariosDto);
