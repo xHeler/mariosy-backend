@@ -41,7 +41,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    ResponseEntity<TokenDto> addEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
+    ResponseEntity<Employee> addEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
         log.info("Adding new employee: {}", employeeDto);
         return employeeService.saveEmployee(employeeDto);
     }

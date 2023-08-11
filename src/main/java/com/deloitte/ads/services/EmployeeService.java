@@ -1,7 +1,6 @@
 package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.EmployeeDto;
-import com.deloitte.ads.dto.TokenDto;
 import com.deloitte.ads.models.Employee;
 import com.deloitte.ads.utils.KeycloakAuth;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +21,10 @@ public class EmployeeService {
     private final EmployeeCreationService creationService;
     private final EmployeeRetrievalService retrievalService;
     private final EmployeeDataService managementService;
-    private final KeycloakAuth keycloakAuth;
 
-    public ResponseEntity<TokenDto> saveEmployee(EmployeeDto employeeDto) {
+    public ResponseEntity<Employee> saveEmployee(EmployeeDto employeeDto) {
         log.info("Saving employee: {}", employeeDto);
-        creationService.saveEmployee(employeeDto);
-        TokenDto tokenDto = keycloakAuth.authenticateWithKeycloak(employeeDto);
-        log.info("Received token from authenticator: {}", tokenDto);
-        return ResponseEntity.ok(tokenDto);
+        return creationService.saveEmployee(employeeDto);
     }
 
     public ResponseEntity<EmployeeDto> saveEmployee(String id, EmployeeDto employeeDto) {

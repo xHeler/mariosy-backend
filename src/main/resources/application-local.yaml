@@ -19,3 +19,10 @@ spring:
 springdoc:
   swagger-ui:
     path: /api/docs
+
+keycloak:
+  base_url: http://localhost:8080
+  reals_name: deloitte
+  admin:
+    username: admin
+    password: admin
