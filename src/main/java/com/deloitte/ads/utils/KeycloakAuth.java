@@ -1,19 +1,22 @@
 package com.deloitte.ads.utils;
 
 import com.deloitte.ads.dto.*;
+import com.deloitte.ads.factories.KeycloakRequestFactory;
+import com.deloitte.ads.factories.KeycloakUrlFactory;
 import com.deloitte.ads.services.EmployeeService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @Slf4j
@@ -37,41 +40,26 @@ public class KeycloakAuth {
 
     private final EmployeeService employeeService;
     private final RestTemplate restTemplate = new RestTemplate();
-
     private final ObjectMapper objectMapper;
 
     private TokenDto getAdminAccessToken() {
         UserLoginDto adminDto = UserLoginDto.builder().email(adminUsername).password(adminPassword).build();
-        adminDto.setEmail(adminUsername);
-        adminDto.setPassword(adminPassword);
-        return authenticateWithKeycloak("master", "admin-cli", adminDto).getBody();
+        ResponseEntity<TokenDto> response = authenticateWithKeycloak("master", "admin-cli", adminDto);
+        return response.getBody();
     }
 
     public ResponseEntity<TokenDto> authenticateWithKeycloak(UserLoginDto userDto) {
-        return this.authenticateWithKeycloak(this.realsName, this.clientId, userDto);
+        return authenticateWithKeycloak(this.realsName, this.clientId, userDto);
     }
 
     public ResponseEntity<TokenDto> authenticateWithKeycloak(String realsName, String clientId, UserLoginDto userDto) {
         log.info("Authenticate to Keycloak Realms: {},  with EmployeeDto: {}", realsName, userDto);
 
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("client_id", clientId);
-        map.add("username", userDto.getEmail());
-        map.add("password", userDto.getPassword());
-        map.add("grant_type", "password");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-        String authUrl = this.baseUrl + "/realms/" + realsName + "/protocol/openid-connect/token";
+        HttpEntity<MultiValueMap<String, String>> request = KeycloakRequestFactory.buildAuthenticationRequest(clientId, userDto);
+        String authUrl = KeycloakUrlFactory.getAuthenticationUrl(this.baseUrl, realsName);
         log.info("Authenticate to auth url: {}", authUrl);
 
-        ResponseEntity<TokenDto> response = restTemplate.postForEntity(
-                authUrl,
-                request, TokenDto.class
-        );
-
+        ResponseEntity<TokenDto> response = restTemplate.postForEntity(authUrl, request, TokenDto.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok(response.getBody());
         } else {
@@ -86,25 +74,16 @@ public class KeycloakAuth {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Failed to obtain admin access token");
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(adminToken.getAccess_token());
-
-        UserDto userDto = UserDto.builder().email(dto.getEmail()).enabled(true).build();
-        HttpEntity<UserDto> request = new HttpEntity<>(userDto, headers);
-        String registerUrl = this.baseUrl + "/admin/realms/" + this.realsName + "/users";
+        HttpEntity<UserDto> request = KeycloakRequestFactory.buildRegisterUserRequest(adminToken, dto);
+        String registerUrl = KeycloakUrlFactory.getRegisterUserUrl(this.baseUrl, this.realsName);
         log.info("Register url: {}", registerUrl);
-        ResponseEntity<String> response = restTemplate.exchange(
-                registerUrl,
-                HttpMethod.POST,
-                request,
-                String.class,
-                this.realsName
-        );
+
+        ResponseEntity<String> response = restTemplate.postForEntity(registerUrl, request, String.class);
         employeeService.saveEmployee(dto);
-        String userId = this.findUserIdByEmail(dto.getEmail());
+
+        String userId = findUserIdByEmail(dto.getEmail());
         log.info("Found user id: {}", userId);
-        this.setNewPassword(userId, dto.getPassword());
+        setNewPassword(userId, dto.getPassword());
         return response;
     }
 
@@ -115,23 +94,11 @@ public class KeycloakAuth {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Failed to obtain admin access token");
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(adminToken.getAccess_token());
-
-        CredentialDto credentialRepresentation = CredentialDto.builder().value(newPassword).build();
-
-        HttpEntity<CredentialDto> request = new HttpEntity<>(credentialRepresentation, headers);
-        String passwordResetUrl = this.baseUrl + "/admin/realms/" + this.realsName + "/users/" + userId + "/reset-password";
+        HttpEntity<CredentialDto> request = KeycloakRequestFactory.buildPasswordResetRequest(adminToken, newPassword);
+        String passwordResetUrl = KeycloakUrlFactory.getPasswordResetUrl(this.baseUrl, this.realsName, userId);
         log.info("Password reset URL: {}", passwordResetUrl);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                passwordResetUrl,
-                HttpMethod.PUT,
-                request,
-                String.class
-        );
-
+        ResponseEntity<String> response = restTemplate.exchange(passwordResetUrl, HttpMethod.PUT, request, String.class);
         return response;
     }
 
@@ -141,25 +108,11 @@ public class KeycloakAuth {
             return null;
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(adminToken.getAccess_token());
-
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
-                .path("/admin/realms/" + realsName + "/users")
-                .queryParam("email", email)
-                .queryParam("exact", true);
-
-        HttpEntity<?> request = new HttpEntity<>(headers);
-        String userSearchUrl = uriBuilder.toUriString();
+        HttpEntity<?> request = KeycloakRequestFactory.buildUserSearchRequest(adminToken);
+        String userSearchUrl = KeycloakUrlFactory.getUserSearchUrl(this.baseUrl, this.realsName, email);
         log.info("User search URL: {}", userSearchUrl);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                userSearchUrl,
-                HttpMethod.GET,
-                request,
-                String.class
-        );
-
+        ResponseEntity<String> response = restTemplate.exchange(userSearchUrl, HttpMethod.GET, request, String.class);
         log.info("Response from search user: {}", response.getBody());
 
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
