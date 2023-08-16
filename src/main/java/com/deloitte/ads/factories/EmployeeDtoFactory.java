@@ -12,4 +12,13 @@ public class EmployeeDtoFactory {
                 .build();
     }
 
+    public static EmployeeDto createEmployeeDto(String email, String firstName, String lastName) {
+        return EmployeeDto
+                .builder()
+                .email(email)
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+    }
+
 }

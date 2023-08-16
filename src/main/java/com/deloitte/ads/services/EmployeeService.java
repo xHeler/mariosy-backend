@@ -2,7 +2,6 @@ package com.deloitte.ads.services;
 
 import com.deloitte.ads.dto.EmployeeDto;
 import com.deloitte.ads.models.Employee;
-import com.deloitte.ads.utils.KeycloakAuth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

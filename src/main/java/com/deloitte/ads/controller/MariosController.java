@@ -19,6 +19,7 @@ public class MariosController {
     private final MariosService mariosService;
 
     @GetMapping
+    @SecureEndpoint
     ResponseEntity<MariosListDto> getAllMarios(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "12") int size) {
         log.info("Fetching all Marios with pagination - Page: {}, Size: {}", page, size);
@@ -26,12 +27,14 @@ public class MariosController {
     }
 
     @GetMapping("/{mariosId}")
+    @SecureEndpoint
     ResponseEntity<Marios> getMariosById(@PathVariable("mariosId") String mariosId) {
         log.info("Get marios by ID: {}", mariosId);
         return mariosService.getMariosById(mariosId);
     }
 
     @GetMapping("/sent/{employeeId}")
+    @SecureEndpoint
     ResponseEntity<MariosListDto> getAllSentMariosByEmployeeId(@RequestParam(defaultValue = "0") int page,
                                                                @RequestParam(defaultValue = "12") int size,
                                                                @PathVariable String employeeId) {
@@ -40,6 +43,7 @@ public class MariosController {
     }
 
     @GetMapping("/receive/{employeeId}")
+    @SecureEndpoint
     ResponseEntity<MariosListDto> getAllReceiveMariosByEmployeeId(@RequestParam(defaultValue = "0") int page,
                                                                   @RequestParam(defaultValue = "12") int size,
                                                                   @PathVariable String employeeId) {
@@ -55,12 +59,14 @@ public class MariosController {
     }
 
     @DeleteMapping("/{mariosId}")
+    @SecureEndpoint
     ResponseEntity<Void> removeMariosByMariosId(@PathVariable String mariosId) {
         log.info("Removing Marios with ID: {}", mariosId);
         return mariosService.removeMariosById(mariosId);
     }
 
     @PutMapping("/{mariosId}")
+    @SecureEndpoint
     ResponseEntity<Void> updateMarios(@PathVariable String mariosId) {
         log.info("Updating Marios with ID: {}", mariosId);
         return mariosService.updateMariosById(mariosId);

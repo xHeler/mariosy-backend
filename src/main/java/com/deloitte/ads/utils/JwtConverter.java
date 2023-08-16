@@ -1,5 +1,11 @@
 package com.deloitte.ads.utils;
 
+import com.deloitte.ads.dto.EmployeeDto;
+import com.deloitte.ads.factories.EmployeeDtoFactory;
+import com.deloitte.ads.services.EmployeeCreationService;
+import com.deloitte.ads.services.EmployeeRetrievalService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,12 +21,25 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+
+    private final EmployeeCreationService employeeCreationService;
+    private final EmployeeRetrievalService employeeRetrievalService;
 
     @Override
     public AbstractAuthenticationToken convert(Jwt source) {
+        log.info("Converting JWT to AuthenticationToken...");
         Collection<GrantedAuthority> authorities = extractRoles(source);
+
+        if (!isEmployeeAlreadyExist(source)) {
+            log.info("Employee does not exist. Creating new employee...");
+            createUserFromJwtTokenInformation(source);
+        }
+
         String name = source.getClaim(JwtClaimNames.SUB);
+        log.info("Converted JWT to AuthenticationToken for user: {}", name);
         return new JwtAuthenticationToken(source, authorities, name);
     }
 
@@ -41,4 +60,19 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
                 .collect(Collectors.toSet());
     }
 
+    private void createUserFromJwtTokenInformation(Jwt jwt) {
+        String firstName = jwt.getClaim("given_name");
+        String lastName = jwt.getClaim("family_name");
+        String email = jwt.getClaim("email");
+        String employeeId = jwt.getClaim("sub");
+        log.info("Created new employee from JWT information. Employee ID: {}", employeeId);
+        EmployeeDto employee = EmployeeDtoFactory.createEmployeeDto(email, firstName, lastName);
+        employeeCreationService.saveEmployee(employeeId, employee);
+    }
+
+    private boolean isEmployeeAlreadyExist(Jwt jwt) {
+        String employeeId = jwt.getClaim("sub");
+        log.info("Checking if employee already exists. Employee ID: {}", employeeId);
+        return employeeRetrievalService.isEmployeeExist(employeeId);
+    }
 }
