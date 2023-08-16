@@ -22,7 +22,6 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping
-    @SecureEndpoint
     ResponseEntity<List<Employee>> getAllEmployees() {
         log.info("Fetching all employees");
         List<Employee> employees = employeeService.getAllEmployees();
