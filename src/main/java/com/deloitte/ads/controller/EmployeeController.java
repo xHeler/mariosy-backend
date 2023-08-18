@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("http://bkwiatkowski-frontend.s3-website.eu-central-1.amazonaws.com")
 @RequestMapping("/api/employee")
 @RequiredArgsConstructor
 @Slf4j

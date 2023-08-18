@@ -3,4 +3,4 @@ spring:
     url: mongodb://admin:secret@127.0.0.1:27017/mariosy
 springdoc:
   swagger-ui:
-    path: /docs/swagger-ui
+    path: /api/docs
