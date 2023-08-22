@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://bkwiatkowski-frontend.s3-website.eu-central-1.amazonaws.com")
 @RequestMapping("/api/marios")
 @RequiredArgsConstructor
 @Slf4j
