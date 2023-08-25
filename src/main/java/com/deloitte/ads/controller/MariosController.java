@@ -10,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/marios")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://bkwiatkowski-frontend.s3-website.eu-central-1.amazonaws.com")
 @Slf4j
 public class MariosController {
     private final MariosService mariosService;

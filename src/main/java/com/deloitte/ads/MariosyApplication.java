@@ -12,5 +12,4 @@ public class MariosyApplication {
     public static void main(String[] args) {
         SpringApplication.run(MariosyApplication.class, args);
     }
-
 }

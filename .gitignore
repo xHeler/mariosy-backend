@@ -43,3 +43,5 @@ maven-wrapper.jar
 
 .env
 .env-keycloak
+global-bundle.pem
+compose.app.yaml
