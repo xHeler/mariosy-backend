@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employee")
+@CrossOrigin(origins = "http://bkwiatkowski-frontend.s3-website.eu-central-1.amazonaws.com")
 @RequiredArgsConstructor
 @Slf4j
 public class EmployeeController {

@@ -3,7 +3,7 @@ services:
     restart: always
     image: mongo
     env_file:
-      - .env
+      - .env-mongodb
     ports:
       - "27017:27017"
     volumes:
